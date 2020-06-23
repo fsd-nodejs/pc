@@ -204,6 +204,8 @@ const TableList: React.FC<{}> = () => {
         columns={columns}
         rowSelection={{}}
       />
+
+      {/* 创建 */}
       <CreateForm onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}>
         <ProTable<TableListItem, TableListItem>
           onSubmit={async (value) => {
@@ -221,6 +223,8 @@ const TableList: React.FC<{}> = () => {
           rowSelection={{}}
         />
       </CreateForm>
+
+      {/* 更新 */}
       {stepFormValues && Object.keys(stepFormValues).length ? (
         <UpdateForm
           onSubmit={async (value) => {

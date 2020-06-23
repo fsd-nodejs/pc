@@ -5,9 +5,19 @@ import { notification } from 'antd';
 import { history, RequestConfig } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
+// import { RequestOptionsInit } from 'umi-request/types/index';
 import { queryCurrent } from './services/user';
-
 import defaultSettings from '../config/defaultSettings';
+
+export interface response {
+  success: boolean; // if request is success
+  data?: any; // response data
+  errorCode?: string; // code for errorType
+  errorMessage?: string; // message display to user
+  showType?: number; // error display type： 0 silent; 1 message.warn; 2 message.error; 4 notification; 9 page
+  traceId?: string; // Convenient for back-end Troubleshooting: unique request ID
+  host?: string; // onvenient for backend Troubleshooting: host of current access server
+}
 
 export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
@@ -88,5 +98,12 @@ const errorHandler = (error: { response: Response }) => {
 };
 
 export const request: RequestConfig = {
+  timeout: 30000,
   errorHandler,
+  responseInterceptors: [
+    async (response: Response) => {
+      const res: response = await response.json();
+      return res.data;
+    },
+  ],
 };
