@@ -23,165 +23,223 @@ export default {
   'GET /api/currentUser': (req: Request, res: Response) => {
     if (!getAccess()) {
       res.status(401).send({
+        success: true,
         data: {
           isLogin: false,
         },
         errorCode: '401',
         errorMessage: '请先登录！',
-        success: true,
+        showType: 0,
       });
       return;
     }
     res.send({
-      name: 'Serati Ma',
-      avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
-      userid: '00000001',
-      email: 'antdesign@alipay.com',
-      signature: '海纳百川，有容乃大',
-      title: '交互专家',
-      group: '蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED',
-      tags: [
-        {
-          key: '0',
-          label: '很有想法的',
+      success: true,
+      data: {
+        name: 'Serati Ma',
+        avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
+        userid: '00000001',
+        email: 'antdesign@alipay.com',
+        signature: '海纳百川，有容乃大',
+        title: '交互专家',
+        group: '蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED',
+        tags: [
+          {
+            key: '0',
+            label: '很有想法的',
+          },
+          {
+            key: '1',
+            label: '专注设计',
+          },
+          {
+            key: '2',
+            label: '辣~',
+          },
+          {
+            key: '3',
+            label: '大长腿',
+          },
+          {
+            key: '4',
+            label: '川妹子',
+          },
+          {
+            key: '5',
+            label: '海纳百川',
+          },
+        ],
+        notifyCount: 12,
+        unreadCount: 11,
+        country: 'China',
+        access: getAccess(),
+        geographic: {
+          province: {
+            label: '浙江省',
+            key: '330000',
+          },
+          city: {
+            label: '杭州市',
+            key: '330100',
+          },
         },
-        {
-          key: '1',
-          label: '专注设计',
-        },
-        {
-          key: '2',
-          label: '辣~',
-        },
-        {
-          key: '3',
-          label: '大长腿',
-        },
-        {
-          key: '4',
-          label: '川妹子',
-        },
-        {
-          key: '5',
-          label: '海纳百川',
-        },
-      ],
-      notifyCount: 12,
-      unreadCount: 11,
-      country: 'China',
-      access: getAccess(),
-      geographic: {
-        province: {
-          label: '浙江省',
-          key: '330000',
-        },
-        city: {
-          label: '杭州市',
-          key: '330100',
-        },
+        address: '西湖区工专路 77 号',
+        phone: '0752-268888888',
       },
-      address: '西湖区工专路 77 号',
-      phone: '0752-268888888',
+      errorCode: '200',
+      errorMessage: null,
+      showType: 0,
     });
   },
   // GET POST 可省略
-  'GET /api/users': [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
+  'GET /api/users': {
+    success: true,
+    data: {
+      list: [
+        {
+          key: '1',
+          name: 'John Brown',
+          age: 32,
+          address: 'New York No. 1 Lake Park',
+        },
+        {
+          key: '2',
+          name: 'Jim Green',
+          age: 42,
+          address: 'London No. 1 Lake Park',
+        },
+        {
+          key: '3',
+          name: 'Joe Black',
+          age: 32,
+          address: 'Sidney No. 1 Lake Park',
+        },
+      ],
+      current: 1,
+      pageSize: 10,
+      total: 3,
     },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-    },
-  ],
+    errorCode: '200',
+    errorMessage: null,
+    showType: 0,
+  },
   'POST /api/login/account': (req: Request, res: Response) => {
     const { password, username, type } = req.body;
     if (password === 'ant.design' && username === 'admin') {
       res.send({
-        status: 'ok',
-        type,
-        currentAuthority: 'admin',
+        success: true,
+        data: {
+          status: 'ok',
+          type,
+          currentAuthority: 'admin',
+        },
+        errorCode: '200',
+        errorMessage: null,
+        showType: 0,
       });
       access = 'admin';
       return;
     }
     if (password === 'ant.design' && username === 'user') {
       res.send({
-        status: 'ok',
-        type,
-        currentAuthority: 'user',
+        success: true,
+        data: {
+          status: 'ok',
+          type,
+          currentAuthority: 'user',
+        },
+        errorCode: '200',
+        errorMessage: null,
+        showType: 0,
       });
       access = 'user';
       return;
     }
     if (type === 'mobile') {
       res.send({
-        status: 'ok',
-        type,
-        currentAuthority: 'admin',
+        success: true,
+        data: {
+          status: 'ok',
+          type,
+          currentAuthority: 'admin',
+        },
+        errorCode: '200',
+        errorMessage: null,
+        showType: 0,
       });
       return;
     }
 
     res.send({
-      status: 'error',
-      type,
-      currentAuthority: 'guest',
+      success: true,
+      data: {
+        status: 'error',
+        type,
+        currentAuthority: 'guest',
+      },
+      errorCode: '200',
+      errorMessage: null,
+      showType: 0,
     });
     access = 'guest';
   },
   'GET /api/login/outLogin': (req: Request, res: Response) => {
     access = '';
-    res.send({ data: {}, success: true });
+    res.send({
+      success: true,
+      data: {},
+      errorCode: '200',
+      errorMessage: null,
+      showType: 0,
+    });
   },
   'POST /api/register': (req: Request, res: Response) => {
-    res.send({ status: 'ok', currentAuthority: 'user', success: true });
+    res.send({
+      success: true,
+      data: {
+        status: 'ok',
+        currentAuthority: 'user',
+        success: true,
+      },
+      errorCode: '200',
+      errorMessage: null,
+      showType: 0,
+    });
   },
   'GET /api/500': (req: Request, res: Response) => {
     res.status(500).send({
-      timestamp: 1513932555104,
-      status: 500,
-      error: 'error',
-      message: 'error',
-      path: '/base/category/list',
+      success: false,
+      data: null,
+      errorCode: 500,
+      errorMessage: 'error',
+      showType: 2,
     });
   },
   'GET /api/404': (req: Request, res: Response) => {
     res.status(404).send({
-      timestamp: 1513932643431,
-      status: 404,
-      error: 'Not Found',
-      message: 'No message available',
-      path: '/base/category/list/2121212',
+      success: true,
+      data: null,
+      errorCode: 404,
+      errorMessage: 'Not Found',
+      showType: 2,
     });
   },
   'GET /api/403': (req: Request, res: Response) => {
     res.status(403).send({
-      timestamp: 1513932555104,
-      status: 403,
-      error: 'Unauthorized',
-      message: 'Unauthorized',
-      path: '/base/category/list',
+      success: true,
+      data: null,
+      errorCode: 403,
+      errorMessage: 'No Permission',
+      showType: 2,
     });
   },
   'GET /api/401': (req: Request, res: Response) => {
     res.status(401).send({
-      timestamp: 1513932555104,
-      status: 401,
-      error: 'Unauthorized',
-      message: 'Unauthorized',
-      path: '/base/category/list',
+      success: true,
+      data: null,
+      errorCode: 401,
+      errorMessage: 'Unauthorized',
+      showType: 2,
     });
   },
 
