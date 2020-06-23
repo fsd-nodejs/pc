@@ -59,8 +59,8 @@ You can view full document on our [official website](https://pro.ant.design). An
 ## TODO
 
 - 超级管理
-- - [] 权限
-- - [] 角色
-- - [] 用户
-- - [] 菜单
-- - [] 日志
+- - [ ] 权限
+- - [ ] 角色
+- - [ ] 用户
+- - [ ] 菜单
+- - [ ] 日志
