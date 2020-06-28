@@ -49,4 +49,12 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
+
+  // 超级管理
+  'menu.super': 'Super',
+  'menu.super.permissions': 'Permissions',
+  'menu.super.roles': 'Roles',
+  'menu.super.users': 'Users',
+  'menu.super.menus': 'Menus',
+  'menu.super.logs': 'Logs',
 };
