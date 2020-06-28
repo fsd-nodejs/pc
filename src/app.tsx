@@ -9,16 +9,6 @@ import Footer from '@/components/Footer';
 import { queryCurrent } from './services/user';
 import defaultSettings from '../config/defaultSettings';
 
-export interface response {
-  success: boolean; // if request is success
-  data?: any; // response data
-  errorCode?: string; // code for errorType
-  errorMessage?: string; // message display to user
-  showType?: number; // error display type： 0 silent; 1 message.warn; 2 message.error; 4 notification; 9 page
-  traceId?: string; // Convenient for back-end Troubleshooting: unique request ID
-  host?: string; // onvenient for backend Troubleshooting: host of current access server
-}
-
 export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   settings?: LayoutSettings;
@@ -26,7 +16,8 @@ export async function getInitialState(): Promise<{
   // 如果是登录页面，不执行
   if (history.location.pathname !== '/user/login') {
     try {
-      const currentUser = await queryCurrent();
+      const result = await queryCurrent();
+      const currentUser = result.data as API.CurrentUser;
       return {
         currentUser,
         settings: defaultSettings,
@@ -100,10 +91,4 @@ const errorHandler = (error: { response: Response }) => {
 export const request: RequestConfig = {
   timeout: 30000,
   errorHandler,
-  responseInterceptors: [
-    async (response: Response) => {
-      const res: response = await response.json();
-      return res.data;
-    },
-  ],
 };

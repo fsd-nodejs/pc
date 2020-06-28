@@ -1,7 +1,7 @@
 import { AlipayCircleOutlined, TaobaoCircleOutlined, WeiboCircleOutlined } from '@ant-design/icons';
 import { Alert, Checkbox, message } from 'antd';
 import React, { useState } from 'react';
-import { Link, SelectLang, history, useModel } from 'umi';
+import { Link, SelectLang, history, useModel, useRequest } from 'umi';
 import { getPageQuery } from '@/utils/utils';
 import logo from '@/assets/logo.svg';
 import { LoginParamsType, fakeAccountLogin } from '@/services/login';
@@ -47,18 +47,17 @@ const replaceGoto = () => {
 
 const Login: React.FC<{}> = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginStateType>({});
-  const [submitting, setSubmitting] = useState(false);
 
   const { refresh } = useModel('@@initialState');
   const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState<string>('account');
+  const { run, loading: submitting } = useRequest(fakeAccountLogin, { manual: true });
 
   const handleSubmit = async (values: LoginParamsType) => {
-    setSubmitting(true);
     try {
       // 登录
-      const result = await fakeAccountLogin({ ...values, type });
-      if (result?.status === 'ok') {
+      const data = (await run({ ...values, type })) as API.LoginStateType;
+      if (data?.status === 'ok') {
         message.success('登陆成功！');
         replaceGoto();
         setTimeout(() => {
@@ -67,11 +66,10 @@ const Login: React.FC<{}> = () => {
         return;
       }
       // 如果失败去设置用户错误信息
-      setUserLoginState(result);
+      setUserLoginState(data);
     } catch (error) {
       message.error('登陆失败，请重试！');
     }
-    setSubmitting(false);
   };
 
   const { status, type: loginType } = userLoginState;

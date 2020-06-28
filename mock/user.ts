@@ -23,7 +23,7 @@ export default {
   'GET /api/currentUser': (req: Request, res: Response) => {
     if (!getAccess()) {
       res.status(401).send({
-        success: true,
+        success: false,
         data: {
           isLogin: false,
         },
@@ -126,18 +126,20 @@ export default {
   'POST /api/login/account': (req: Request, res: Response) => {
     const { password, username, type } = req.body;
     if (password === 'ant.design' && username === 'admin') {
-      res.send({
-        success: true,
-        data: {
-          status: 'ok',
-          type,
-          currentAuthority: 'admin',
-        },
-        errorCode: '200',
-        errorMessage: null,
-        showType: 0,
-      });
-      access = 'admin';
+      setTimeout(() => {
+        res.send({
+          success: true,
+          data: {
+            status: 'ok',
+            type,
+            currentAuthority: 'admin',
+          },
+          errorCode: '200',
+          errorMessage: null,
+          showType: 0,
+        });
+        access = 'admin';
+      }, 1000);
       return;
     }
     if (password === 'ant.design' && username === 'user') {
