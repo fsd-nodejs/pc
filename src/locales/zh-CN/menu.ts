@@ -49,4 +49,12 @@ export default {
   'menu.editor.flow': '流程编辑器',
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
+
+  // 超级管理
+  'menu.super': '超级管理',
+  'menu.super.permissions': '权限管理',
+  'menu.super.roles': '角色管理',
+  'menu.super.users': '用户管理',
+  'menu.super.menus': '菜单管理',
+  'menu.super.logs': '操作日志',
 };
