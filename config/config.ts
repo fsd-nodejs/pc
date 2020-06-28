@@ -53,33 +53,33 @@ export default defineConfig({
       access: 'canAdmin',
       routes: [
         {
+          path: '/super/users',
           name: 'users',
           icon: 'TeamOutlined',
-          path: '/super/users',
           component: './super/users',
         },
         {
+          path: '/super/roles',
           name: 'roles',
           icon: 'UserOutlined',
-          path: '/super/roles',
           component: './super/roles',
         },
         {
+          path: '/super/permissions',
           name: 'permissions',
           icon: 'StopOutlined',
-          path: '/super/permissions',
           component: './super/permissions',
         },
         {
+          path: '/super/menus',
           name: 'menus',
           icon: 'MenuOutlined',
-          path: '/super/menus',
           component: './super/menus',
         },
         {
+          path: '/super/logs',
           name: 'logs',
           icon: 'HistoryOutlined',
-          path: '/super/logs',
           component: './super/logs',
         },
       ],
