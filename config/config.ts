@@ -2,9 +2,7 @@
 import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
-
 const { REACT_APP_ENV } = process.env;
-
 export default defineConfig({
   hash: true,
   antd: {},
@@ -42,12 +40,49 @@ export default defineConfig({
         },
       ],
     },
-
     {
       path: '/welcome',
       name: 'welcome',
       icon: 'smile',
       component: './Welcome',
+    },
+    {
+      path: '/super',
+      name: 'super',
+      icon: 'crown',
+      access: 'canAdmin',
+      routes: [
+        {
+          name: 'users',
+          icon: 'TeamOutlined',
+          path: '/super/users',
+          component: './super/users',
+        },
+        {
+          name: 'roles',
+          icon: 'UserOutlined',
+          path: '/super/roles',
+          component: './super/roles',
+        },
+        {
+          name: 'permissions',
+          icon: 'StopOutlined',
+          path: '/super/permissions',
+          component: './super/permissions',
+        },
+        {
+          name: 'menus',
+          icon: 'MenuOutlined',
+          path: '/super/menus',
+          component: './super/menus',
+        },
+        {
+          name: 'logs',
+          icon: 'HistoryOutlined',
+          path: '/super/logs',
+          component: './super/logs',
+        },
+      ],
     },
     {
       path: '/admin',
