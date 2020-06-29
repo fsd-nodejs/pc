@@ -1,14 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Divider, Dropdown, Menu, message, Input } from 'antd';
+import { Button, Divider, Dropdown, Menu, message, Tag, Select } from 'antd';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { SorterResult } from 'antd/es/table/interface';
 
 import {
   queryPermission,
   updatePermission,
-  addPermission,
+  createPermission,
   removePermission,
 } from '@/services/permission';
 import { TableListItem } from '@/services/permission.d';
@@ -17,14 +17,16 @@ import UpdateForm, { FormValueType } from './components/UpdateForm';
 
 import styles from './index.less';
 
+const { Option } = Select;
+
 /**
  * 添加
  * @param fields
  */
-const handleAdd = async (fields: TableListItem) => {
+const handleCreate = async (fields: TableListItem) => {
   const hide = message.loading('正在添加');
   try {
-    await addPermission({ ...fields });
+    await createPermission({ ...fields });
     hide();
     message.success('添加成功');
     return true;
@@ -45,7 +47,7 @@ const handleUpdate = async (fields: FormValueType) => {
     await updatePermission({
       name: fields.name,
       desc: fields.desc,
-      key: fields.key,
+      id: fields.id,
     });
     hide();
 
@@ -67,7 +69,7 @@ const handleRemove = async (selectedRows: TableListItem[]) => {
   if (!selectedRows) return true;
   try {
     await removePermission({
-      key: selectedRows.map((row) => row.key),
+      key: selectedRows.map((row) => row.id),
     });
     hide();
     message.success('删除成功，即将刷新');
@@ -87,59 +89,145 @@ export default () => {
   const actionRef = useRef<ActionType>();
   const columns: ProColumns<TableListItem>[] = [
     {
-      title: '规则名称',
-      dataIndex: 'name',
+      title: 'ID',
+      dataIndex: 'id',
+      hideInForm: true,
+      ellipsis: true,
+      fixed: 'left',
+      width: 80,
       rules: [
         {
           required: true,
-          message: '规则名称为必填项',
+          message: 'ID为必填项',
         },
       ],
+    },
+    {
+      title: '标识',
+      dataIndex: 'slug',
+      ellipsis: true,
+      width: 140,
+      rules: [
+        {
+          required: true,
+          message: '标识为必填项',
+        },
+      ],
+    },
+    {
+      title: '名称',
+      dataIndex: 'name',
+      ellipsis: true,
+      width: 140,
+      rules: [
+        {
+          required: true,
+          message: '名称为必填项',
+        },
+      ],
+    },
+    {
+      title: 'HTTP方法',
+      dataIndex: 'httpMethod',
+      hideInTable: true,
+      rules: [
+        {
+          required: true,
+          message: 'HTTP方法为必填项',
+        },
+      ],
+      renderFormItem: (item, { defaultRender, ...rest }) => {
+        return (
+          <Select {...rest} mode="multiple" style={{ width: '100%' }} placeholder="请选择HTTP方法">
+            <Option value="GET">GET</Option>
+            <Option value="POST">POST</Option>
+            <Option value="PUT">PUT</Option>
+            <Option value="DELETE">DELETE</Option>
+            <Option value="PATCH">PATCH</Option>
+            <Option value="OPTIONS">OPTIONS</Option>
+          </Select>
+        );
+      },
+    },
+    {
+      title: 'HTTP路径',
+      dataIndex: 'httpPath',
+      hideInTable: true,
+      rules: [
+        {
+          required: true,
+          message: 'HTTP路径为必填项',
+        },
+      ],
+    },
+    {
+      title: '路由',
+      dataIndex: 'httpRoute',
+      hideInSearch: true,
+      hideInForm: true,
+      rules: [
+        {
+          required: true,
+          message: '标识为必填项',
+        },
+      ],
+      render: (_, record) => (
+        <>
+          {record.httpMethod ? (
+            record.httpMethod.split(',').map((text, index) => (
+              <Tag key={index} color="#108ee9">
+                {text}
+              </Tag>
+            ))
+          ) : (
+            <Tag color="#108ee9">ANY</Tag>
+          )}
+          <Tag color="red">{record.httpPath}</Tag>
+        </>
+      ),
     },
     {
       title: '描述',
       dataIndex: 'desc',
       valueType: 'textarea',
-    },
-    {
-      title: '服务调用次数',
-      dataIndex: 'callNo',
-      sorter: true,
-      hideInForm: true,
-      renderText: (val: string) => `${val} 万`,
+      hideInSearch: true,
+      ellipsis: true,
+      width: 220,
     },
     {
       title: '状态',
       dataIndex: 'status',
+      hideInSearch: true,
       hideInForm: true,
+      ellipsis: true,
+      width: 80,
       valueEnum: {
         0: { text: '关闭', status: 'Default' },
-        1: { text: '运行中', status: 'Processing' },
-        2: { text: '已上线', status: 'Success' },
-        3: { text: '异常', status: 'Error' },
+        1: { text: '启用', status: 'Processing' },
       },
     },
     {
-      title: '上次调度时间',
+      title: '更新时间',
       dataIndex: 'updatedAt',
       sorter: true,
       valueType: 'dateTime',
+      hideInSearch: true,
       hideInForm: true,
-      renderFormItem: (item, { defaultRender, ...rest }, form) => {
-        const status = form.getFieldValue('status');
-        if (`${status}` === '0') {
-          return false;
-        }
-        if (`${status}` === '3') {
-          return <Input {...rest} placeholder="请输入异常原因！" />;
-        }
-        return defaultRender(item);
-      },
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createdAt',
+      sorter: true,
+      valueType: 'dateTime',
+      hideInSearch: true,
+      hideInForm: true,
     },
     {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
+      width: 140,
+      fixed: 'right',
       render: (_, record) => (
         <>
           <a
@@ -148,21 +236,23 @@ export default () => {
               setStepFormValues(record);
             }}
           >
-            配置
+            查看
           </a>
           <Divider type="vertical" />
-          <a href="">订阅警报</a>
+          <a href="">编辑</a>
+          <Divider type="vertical" />
+          <a href="">删除</a>
         </>
       ),
     },
   ];
 
   return (
-    <PageHeaderWrapper content="这是一个新页面，从这里进行开发！" className={styles.main}>
+    <PageHeaderWrapper content="" className={styles.main}>
       <ProTable<TableListItem>
         headerTitle="查询表格"
         actionRef={actionRef}
-        rowKey="key"
+        rowKey="id"
         onChange={(_, _filter, _sorter) => {
           const sorterResult = _sorter as SorterResult<TableListItem>;
           if (sorterResult.field) {
@@ -189,7 +279,6 @@ export default () => {
                   selectedKeys={[]}
                 >
                   <Menu.Item key="remove">批量删除</Menu.Item>
-                  <Menu.Item key="approval">批量审批</Menu.Item>
                 </Menu>
               }
             >
@@ -199,24 +288,22 @@ export default () => {
             </Dropdown>
           ),
         ]}
-        tableAlertRender={({ selectedRowKeys, selectedRows }) => (
+        tableAlertRender={({ selectedRowKeys }) => (
           <div>
             已选择 <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a> 项&nbsp;&nbsp;
-            <span>
-              服务调用次数总计 {selectedRows.reduce((pre, item) => pre + item.callNo, 0)} 万
-            </span>
           </div>
         )}
         request={(params) => queryPermission(params)}
         columns={columns}
         rowSelection={{}}
+        scroll={{ x: 1400 }}
       />
 
       {/* 创建 */}
       <CreateForm onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}>
         <ProTable<TableListItem, TableListItem>
           onSubmit={async (value) => {
-            const success = await handleAdd(value);
+            const success = await handleCreate(value);
             if (success) {
               handleModalVisible(false);
               if (actionRef.current) {
@@ -224,7 +311,7 @@ export default () => {
               }
             }
           }}
-          rowKey="key"
+          rowKey="id"
           type="form"
           columns={columns}
           rowSelection={{}}

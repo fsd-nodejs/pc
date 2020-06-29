@@ -7,32 +7,35 @@ export async function queryPermission(params?: TableListParams) {
   });
 }
 
+export async function showPermission(params?: TableListParams) {
+  return request('/api/permission/show', {
+    params,
+  });
+}
+
 export async function removePermission(params: { key: number[] }) {
   return request('/api/permission/remove', {
-    method: 'POST',
+    method: 'DELETE',
     data: {
       ...params,
-      method: 'delete',
     },
   });
 }
 
-export async function addPermission(params: TableListItem) {
-  return request('/api/permission/add', {
+export async function createPermission(params: TableListItem) {
+  return request('/api/permission/create', {
     method: 'POST',
     data: {
       ...params,
-      method: 'post',
     },
   });
 }
 
 export async function updatePermission(params: TableListParams) {
   return request('/api/permission/update', {
-    method: 'POST',
+    method: 'PUT',
     data: {
       ...params,
-      method: 'update',
     },
   });
 }
