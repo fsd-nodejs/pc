@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Divider, Dropdown, Menu, message, Tag, Select } from 'antd';
+import { Button, Divider, Dropdown, Menu, message, Tag, Select, Popconfirm } from 'antd';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { SorterResult } from 'antd/es/table/interface';
 
@@ -50,7 +50,6 @@ const handleUpdate = async (fields: FormValueType) => {
       id: fields.id,
     });
     hide();
-
     message.success('配置成功');
     return true;
   } catch (error) {
@@ -69,7 +68,7 @@ const handleRemove = async (selectedRows: TableListItem[]) => {
   if (!selectedRows) return true;
   try {
     await removePermission({
-      key: selectedRows.map((row) => row.id),
+      id: selectedRows.map((row) => row.id),
     });
     hide();
     message.success('删除成功，即将刷新');
@@ -153,6 +152,7 @@ export default () => {
       title: 'HTTP路径',
       dataIndex: 'httpPath',
       hideInTable: true,
+      valueType: 'textarea',
       rules: [
         {
           required: true,
@@ -173,9 +173,9 @@ export default () => {
       ],
       render: (_, record) => (
         <>
-          {record.httpMethod ? (
-            record.httpMethod.split(',').map((text, index) => (
-              <Tag key={index} color="#108ee9">
+          {record.httpMethod?.length > 0 ? (
+            record.httpMethod.map((text, index) => (
+              <Tag key={index} color="#108ee9" style={{ marginBottom: 8 }}>
                 {text}
               </Tag>
             ))
@@ -193,18 +193,6 @@ export default () => {
       hideInSearch: true,
       ellipsis: true,
       width: 220,
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      hideInSearch: true,
-      hideInForm: true,
-      ellipsis: true,
-      width: 80,
-      valueEnum: {
-        0: { text: '关闭', status: 'Default' },
-        1: { text: '启用', status: 'Processing' },
-      },
     },
     {
       title: '更新时间',
@@ -241,7 +229,19 @@ export default () => {
           <Divider type="vertical" />
           <a href="">编辑</a>
           <Divider type="vertical" />
-          <a href="">删除</a>
+          <Popconfirm
+            title="你确定要删除该数据吗?"
+            placement="left"
+            onConfirm={async () => {
+              await handleRemove([record]);
+              actionRef?.current?.reload();
+            }}
+            style={{ width: 220 }}
+            okText="确定"
+            cancelText="取消"
+          >
+            <a href="#">删除</a>
+          </Popconfirm>
         </>
       ),
     },

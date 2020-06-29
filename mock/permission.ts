@@ -14,10 +14,9 @@ const genList = (current: number, pageSize: number) => {
       id: index,
       name: mockjs.Random.name(),
       slug: mockjs.Random.name(),
-      httpMethod: mockjs.Random.pick(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']),
+      httpMethod: [mockjs.Random.pick(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'])],
       httpPath: mockjs.Random.url().split(':/')[1],
       desc: mockjs.Random.paragraph(1, 4),
-      status: Math.floor(Math.random() * 10) % 2,
       updatedAt: new Date(),
       createdAt: new Date(),
     });
@@ -48,22 +47,6 @@ function getPermission(req: Request, res: Response, u: string) {
       }
       return prev[s[0]] - next[s[0]];
     });
-  }
-
-  if (params.status) {
-    const status = params.status.split(',');
-    let filterDataSource: TableListItem[] = [];
-    status.forEach((s: string) => {
-      filterDataSource = filterDataSource.concat(
-        dataSource.filter((item) => {
-          if (parseInt(`${item.status}`, 10) === parseInt(s.split('')[0], 10)) {
-            return true;
-          }
-          return false;
-        }),
-      );
-    });
-    dataSource = filterDataSource;
   }
 
   if (params.id) {
@@ -97,21 +80,22 @@ function postPermission(req: Request, res: Response, u: string, b: Request) {
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
     realUrl = req.url;
   }
+  const { method } = req;
 
   const body = (b && b.body) || req.body;
-  const { method, name, desc, key, httpMethod, httpPath } = body;
+  const { name, desc, id, httpMethod, httpPath, slug } = body;
 
   switch (method) {
     /* eslint no-case-declarations:0 */
-    case 'delete':
-      tableListDataSource = tableListDataSource.filter((item) => key.indexOf(item.id) === -1);
+    case 'DELETE':
+      tableListDataSource = tableListDataSource.filter((item) => id.indexOf(item.id) === -1);
       break;
-    case 'post':
+    case 'POST':
       (() => {
         const newPermission = {
           id: tableListDataSource.length,
           name,
-          slug: '',
+          slug,
           httpMethod,
           httpPath,
           desc,
@@ -124,11 +108,11 @@ function postPermission(req: Request, res: Response, u: string, b: Request) {
       })();
       return;
 
-    case 'update':
+    case 'PUT':
       (() => {
         let newPermission = {};
         tableListDataSource = tableListDataSource.map((item) => {
-          if (item.id === key) {
+          if (item.id === id) {
             newPermission = { ...item, desc, name };
             return { ...item, desc, name };
           }
@@ -155,6 +139,6 @@ export default {
   'GET /api/permission/query': getPermission,
   'GET /api/permission/show': getPermission,
   'POST /api/permission/create': postPermission,
-  'POST /api/permission/remove': postPermission,
+  'DELETE /api/permission/remove': postPermission,
   'POST /api/permission/update': postPermission,
 };
