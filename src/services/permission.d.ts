@@ -26,8 +26,8 @@ export interface TableListParams {
   slug?: string; // 标识
   httpMethod?: string; // 请求方式
   httpPath?: string; // 请求路径
-  desc?: string;
-  sorter?: string;
+  desc?: string; // 描述
+  sorter?: string; // 排序
   pageSize?: number;
   currentPage?: number;
 }
