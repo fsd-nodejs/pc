@@ -42,17 +42,17 @@ const handleCreate = async (fields: TableListItem) => {
  * @param fields
  */
 const handleUpdate = async (fields: TableListItem) => {
-  const hide = message.loading('正在配置');
+  const hide = message.loading('正在更新');
   try {
     await updatePermission({
       ...fields,
     });
     hide();
-    message.success('配置成功');
+    message.success('更新成功');
     return true;
   } catch (error) {
     hide();
-    message.error('配置失败请重试！');
+    message.error('更新失败请重试！');
     return false;
   }
 };
@@ -223,10 +223,10 @@ export default () => {
               setUpdateFormValues(record);
             }}
           >
-            查看
+            编辑
           </a>
-          <Divider type="vertical" />
-          <a href="">编辑</a>
+          {/* <Divider type="vertical" />
+          <a href="">编辑</a> */}
           <Divider type="vertical" />
           <Popconfirm
             title="你确定要删除该数据吗?"
