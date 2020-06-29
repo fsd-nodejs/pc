@@ -99,7 +99,6 @@ function postPermission(req: Request, res: Response, u: string, b: Request) {
           httpMethod,
           httpPath,
           desc,
-          status: 1,
           updatedAt: new Date(),
           createdAt: new Date(),
         };
@@ -113,8 +112,16 @@ function postPermission(req: Request, res: Response, u: string, b: Request) {
         let newPermission = {};
         tableListDataSource = tableListDataSource.map((item) => {
           if (item.id === id) {
-            newPermission = { ...item, desc, name };
-            return { ...item, desc, name };
+            newPermission = {
+              ...item,
+              name,
+              slug,
+              httpMethod,
+              httpPath,
+              desc,
+              updatedAt: new Date(),
+            };
+            return { ...item, ...newPermission };
           }
           return item;
         });
@@ -140,5 +147,5 @@ export default {
   'GET /api/permission/show': getPermission,
   'POST /api/permission/create': postPermission,
   'DELETE /api/permission/remove': postPermission,
-  'POST /api/permission/update': postPermission,
+  'PUT /api/permission/update': postPermission,
 };

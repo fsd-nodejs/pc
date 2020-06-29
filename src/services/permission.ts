@@ -31,7 +31,7 @@ export async function createPermission(params: TableListItem) {
   });
 }
 
-export async function updatePermission(params: TableListParams) {
+export async function updatePermission(params: TableListItem) {
   return request('/api/permission/update', {
     method: 'PUT',
     data: {

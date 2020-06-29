@@ -13,7 +13,7 @@ import {
 } from '@/services/permission';
 import { TableListItem } from '@/services/permission.d';
 import CreateForm from './components/CreateForm';
-import UpdateForm, { FormValueType } from './components/UpdateForm';
+import UpdateForm from './components/UpdateForm';
 
 import styles from './index.less';
 
@@ -41,13 +41,11 @@ const handleCreate = async (fields: TableListItem) => {
  * 更新
  * @param fields
  */
-const handleUpdate = async (fields: FormValueType) => {
+const handleUpdate = async (fields: TableListItem) => {
   const hide = message.loading('正在配置');
   try {
     await updatePermission({
-      name: fields.name,
-      desc: fields.desc,
-      id: fields.id,
+      ...fields,
     });
     hide();
     message.success('配置成功');
@@ -84,7 +82,7 @@ export default () => {
   const [sorter, setSorter] = useState<string>('');
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
-  const [stepFormValues, setStepFormValues] = useState({});
+  const [updateFormValues, setUpdateFormValues] = useState({});
   const actionRef = useRef<ActionType>();
   const columns: ProColumns<TableListItem>[] = [
     {
@@ -172,7 +170,7 @@ export default () => {
           message: '标识为必填项',
         },
       ],
-      render: (_, record) => (
+      render: (_, record: TableListItem) => (
         <>
           {record.httpMethod?.length > 0 ? (
             record.httpMethod.map((text, index) => (
@@ -222,7 +220,7 @@ export default () => {
           <a
             onClick={() => {
               handleUpdateModalVisible(true);
-              setStepFormValues(record);
+              setUpdateFormValues(record);
             }}
           >
             查看
@@ -314,31 +312,49 @@ export default () => {
           }}
           rowKey="id"
           type="form"
+          form={{
+            labelCol: { span: 5 },
+            wrapperCol: { span: 19 },
+          }}
           columns={columns}
           rowSelection={{}}
         />
       </CreateForm>
 
       {/* 更新 */}
-      {stepFormValues && Object.keys(stepFormValues).length ? (
+      {updateFormValues && Object.keys(updateFormValues).length ? (
         <UpdateForm
-          onSubmit={async (value) => {
-            const success = await handleUpdate(value);
-            if (success) {
-              handleUpdateModalVisible(false);
-              setStepFormValues({});
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
-            }
-          }}
           onCancel={() => {
             handleUpdateModalVisible(false);
-            setStepFormValues({});
+            setUpdateFormValues({});
           }}
           updateModalVisible={updateModalVisible}
-          values={stepFormValues}
-        />
+        >
+          <ProTable<TableListItem, TableListItem>
+            onSubmit={async (value) => {
+              const success = await handleUpdate({
+                ...value,
+                id: (updateFormValues as TableListItem).id,
+              });
+              if (success) {
+                handleUpdateModalVisible(false);
+                setUpdateFormValues({});
+                if (actionRef.current) {
+                  actionRef.current.reload();
+                }
+              }
+            }}
+            rowKey="id"
+            type="form"
+            form={{
+              labelCol: { span: 5 },
+              wrapperCol: { span: 19 },
+              initialValues: updateFormValues,
+            }}
+            columns={columns}
+            rowSelection={{}}
+          />
+        </UpdateForm>
       ) : null}
     </PageHeaderWrapper>
   );

@@ -4,9 +4,9 @@ export interface TableListItem {
   slug: string; // 标识
   httpMethod: string[]; // 请求方式
   httpPath: string; // 请求路径
-  desc: string; // 描述
-  updatedAt: Date; // 更新时间
-  createdAt: Date; // 创建时间
+  desc?: string; // 描述
+  updatedAt?: Date; // 更新时间
+  createdAt?: Date; // 创建时间
 }
 
 export interface TableListPagination {
