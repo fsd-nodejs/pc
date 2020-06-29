@@ -37,7 +37,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
   const [formVals, setFormVals] = useState<FormValueType>({
     name: props.values.name,
     desc: props.values.desc,
-    key: props.values.key,
+    id: props.values.id,
     target: '0',
     template: '0',
     type: '1',
