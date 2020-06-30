@@ -137,6 +137,7 @@ export default () => {
       renderFormItem: (item, { defaultRender, ...rest }) => {
         return (
           <Select {...rest} mode="multiple" style={{ width: '100%' }} placeholder="请选择HTTP方法">
+            <Option value="ANY">ANY</Option>
             <Option value="GET">GET</Option>
             <Option value="POST">POST</Option>
             <Option value="PUT">PUT</Option>
@@ -165,6 +166,7 @@ export default () => {
       hideInSearch: true,
       hideInForm: true,
       valueEnum: {
+        ANY: { text: 'ANY', status: 'Default' },
         GET: { text: 'GET', status: 'Default' },
         POST: { text: 'POST', status: 'Default' },
         PUT: { text: 'PUT', status: 'Default' },
