@@ -80,8 +80,8 @@ const handleRemove = async (selectedRows: TableListItem[]) => {
 
 export default () => {
   const [sorter, setSorter] = useState<string>('');
-  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
-  const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
+  const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
+  const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
   const [updateFormValues, setUpdateFormValues] = useState({});
   const actionRef = useRef<ActionType>();
   const columns: ProColumns<TableListItem>[] = [
@@ -229,7 +229,7 @@ export default () => {
         <>
           <a
             onClick={() => {
-              handleUpdateModalVisible(true);
+              setUpdateModalVisible(true);
               setUpdateFormValues(record);
             }}
           >
@@ -272,7 +272,7 @@ export default () => {
           sorter,
         }}
         toolBarRender={(action, { selectedRows }) => [
-          <Button type="primary" onClick={() => handleModalVisible(true)}>
+          <Button type="primary" onClick={() => setCreateModalVisible(true)}>
             <PlusOutlined /> 新建
           </Button>,
           selectedRows && selectedRows.length > 0 && (
@@ -309,12 +309,12 @@ export default () => {
       />
 
       {/* 创建 */}
-      <CreateForm onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}>
+      <CreateForm onCancel={() => setCreateModalVisible(false)} modalVisible={createModalVisible}>
         <ProTable<TableListItem, TableListItem>
           onSubmit={async (value) => {
             const success = await handleCreate(value);
             if (success) {
-              handleModalVisible(false);
+              setCreateModalVisible(false);
               if (actionRef.current) {
                 actionRef.current.reload();
               }
@@ -335,7 +335,7 @@ export default () => {
       {updateFormValues && Object.keys(updateFormValues).length ? (
         <UpdateForm
           onCancel={() => {
-            handleUpdateModalVisible(false);
+            setUpdateModalVisible(false);
             setUpdateFormValues({});
           }}
           updateModalVisible={updateModalVisible}
@@ -347,7 +347,7 @@ export default () => {
                 id: (updateFormValues as TableListItem).id,
               });
               if (success) {
-                handleUpdateModalVisible(false);
+                setUpdateModalVisible(false);
                 setUpdateFormValues({});
                 if (actionRef.current) {
                   actionRef.current.reload();
