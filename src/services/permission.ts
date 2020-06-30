@@ -13,7 +13,7 @@ export async function showPermission(params?: TableListParams) {
   });
 }
 
-export async function removePermission(params: { id: number[] }) {
+export async function removePermission(params: { id: string[] }) {
   return request('/api/permission/remove', {
     method: 'DELETE',
     data: {

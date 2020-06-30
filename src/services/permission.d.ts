@@ -1,6 +1,6 @@
 // 列表内容结构以及表单提交结构
 export interface TableListItem {
-  id: number; // 自增id
+  id: string; // 自增id
   name: string; // 名称
   slug: string; // 标识
   httpMethod: string[]; // 请求方式
@@ -25,7 +25,7 @@ export interface TableListData {
 
 // 查询参数
 export interface TableListParams {
-  id?: number; // 自增id
+  id?: string; // 自增id
   name?: string; // 名称
   slug?: string; // 标识
   httpMethod?: string; // 请求方式

@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Request, Response } from 'express';
+// eslint-disable-next-line
 import mockjs from 'mockjs';
 import { parse } from 'url';
 import { TableListItem, TableListParams } from '@/services/permission.d';
@@ -11,7 +12,7 @@ const genList = (current: number, pageSize: number) => {
   for (let i = 0; i < pageSize; i += 1) {
     const index = (current - 1) * 10 + i;
     tableListDataSource.push({
-      id: index,
+      id: index.toString(),
       name: mockjs.Random.name(),
       slug: mockjs.Random.name(),
       httpMethod: [mockjs.Random.pick(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'])],
@@ -50,7 +51,7 @@ function getPermission(req: Request, res: Response, u: string) {
   }
 
   if (params.id) {
-    dataSource = dataSource.filter((data) => params.id.indexOf(data.id) !== -1);
+    dataSource = dataSource.filter((data) => data.id.includes(params.id || ''));
   }
 
   if (params.slug) {
@@ -93,7 +94,7 @@ function postPermission(req: Request, res: Response, u: string, b: Request) {
     case 'POST':
       (() => {
         const newPermission = {
-          id: tableListDataSource.length,
+          id: tableListDataSource.length.toString(),
           name,
           slug,
           httpMethod,

@@ -14,6 +14,7 @@ import {
 import { TableListItem } from '@/services/permission.d';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
+import DetailForm from './components/DetailForm';
 
 import styles from './index.less';
 
@@ -82,7 +83,8 @@ export default () => {
   const [sorter, setSorter] = useState<string>('');
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
   const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
-  const [updateFormValues, setUpdateFormValues] = useState({});
+  const [detailModalVisible, setDetailModalVisible] = useState<boolean>(false);
+  const [currentFormValues, setCurrentFormValues] = useState({});
   const actionRef = useRef<ActionType>();
   const columns: ProColumns<TableListItem>[] = [
     {
@@ -200,8 +202,7 @@ export default () => {
       dataIndex: 'desc',
       valueType: 'textarea',
       hideInSearch: true,
-      ellipsis: true,
-      width: 220,
+      hideInTable: true,
     },
     {
       title: '更新时间',
@@ -230,13 +231,20 @@ export default () => {
           <a
             onClick={() => {
               setUpdateModalVisible(true);
-              setUpdateFormValues(record);
+              setCurrentFormValues(record);
             }}
           >
             编辑
           </a>
-          {/* <Divider type="vertical" />
-          <a href="">编辑</a> */}
+          <Divider type="vertical" />
+          <a
+            onClick={() => {
+              setDetailModalVisible(true);
+              setCurrentFormValues(record);
+            }}
+          >
+            查看
+          </a>
           <Divider type="vertical" />
           <Popconfirm
             title="你确定要删除该数据吗?"
@@ -332,11 +340,11 @@ export default () => {
       </CreateForm>
 
       {/* 更新 */}
-      {updateFormValues && Object.keys(updateFormValues).length ? (
+      {currentFormValues && Object.keys(currentFormValues).length ? (
         <UpdateForm
           onCancel={() => {
             setUpdateModalVisible(false);
-            setUpdateFormValues({});
+            setCurrentFormValues({});
           }}
           updateModalVisible={updateModalVisible}
         >
@@ -344,11 +352,11 @@ export default () => {
             onSubmit={async (value) => {
               const success = await handleUpdate({
                 ...value,
-                id: (updateFormValues as TableListItem).id,
+                id: (currentFormValues as TableListItem).id,
               });
               if (success) {
                 setUpdateModalVisible(false);
-                setUpdateFormValues({});
+                setCurrentFormValues({});
                 if (actionRef.current) {
                   actionRef.current.reload();
                 }
@@ -359,12 +367,37 @@ export default () => {
             form={{
               labelCol: { span: 5 },
               wrapperCol: { span: 19 },
-              initialValues: updateFormValues,
+              initialValues: currentFormValues,
             }}
             columns={columns}
             rowSelection={{}}
           />
         </UpdateForm>
+      ) : null}
+
+      {/* 详情 */}
+      {currentFormValues && Object.keys(currentFormValues).length ? (
+        <DetailForm
+          onCancel={() => {
+            setUpdateModalVisible(false);
+            setCurrentFormValues({});
+          }}
+          detailModalVisible={detailModalVisible}
+          values={currentFormValues}
+          columns={columns}
+        >
+          <ProTable<TableListItem, TableListItem>
+            rowKey="id"
+            type="form"
+            form={{
+              labelCol: { span: 5 },
+              wrapperCol: { span: 19 },
+              initialValues: currentFormValues,
+            }}
+            columns={columns}
+            rowSelection={{}}
+          />
+        </DetailForm>
       ) : null}
     </PageHeaderWrapper>
   );
