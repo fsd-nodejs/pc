@@ -310,7 +310,10 @@ export default () => {
             已选择 <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a> 项&nbsp;&nbsp;
           </div>
         )}
-        request={(params) => queryPermission(params)}
+        request={async (params) => {
+          const { list, total } = (await queryPermission(params)).data;
+          return { data: list, total, success: true };
+        }}
         columns={columns}
         rowSelection={{}}
         scroll={{ x: 1400 }}
@@ -384,20 +387,7 @@ export default () => {
           }}
           detailModalVisible={detailModalVisible}
           values={currentFormValues}
-          columns={columns}
-        >
-          <ProTable<TableListItem, TableListItem>
-            rowKey="id"
-            type="form"
-            form={{
-              labelCol: { span: 5 },
-              wrapperCol: { span: 19 },
-              initialValues: currentFormValues,
-            }}
-            columns={columns}
-            rowSelection={{}}
-          />
-        </DetailForm>
+        />
       ) : null}
     </PageHeaderWrapper>
   );

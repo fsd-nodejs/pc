@@ -66,14 +66,55 @@ function getPermission(req: Request, res: Response, u: string) {
     dataSource = dataSource.filter((data) => data.httpPath.includes(params.httpPath || ''));
   }
   const result = {
-    data: dataSource,
-    total: tableListDataSource.length,
     success: true,
-    pageSize,
-    current: parseInt(`${params.currentPage}`, 10) || 1,
+    data: {
+      list: dataSource,
+      total: tableListDataSource.length,
+      pageSize,
+      current: parseInt(`${params.currentPage}`, 10) || 1,
+    },
+    errorCode: '200',
+    errorMessage: null,
+    showType: 0,
   };
 
   return res.json(result);
+}
+
+function showPermission(req: Request, res: Response, u: string) {
+  let realUrl = u;
+  if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
+    realUrl = req.url;
+  }
+  const { current = 1, pageSize = 10 } = req.query;
+  const params = (parse(realUrl, true).query as unknown) as TableListParams;
+  let dataSource = [...tableListDataSource].slice(
+    ((current as number) - 1) * (pageSize as number),
+    (current as number) * (pageSize as number),
+  );
+
+  if (params.id) {
+    dataSource = dataSource.filter((data) => data.id.includes(params.id || ''));
+  }
+  if (dataSource.length === 0) {
+    return res.json({
+      success: true,
+      data: null,
+      errorCode: '404',
+      errorMessage: '找不到对应的数据',
+      showType: 0,
+    });
+  }
+
+  const result = {
+    success: true,
+    data: { ...dataSource[0] },
+    errorCode: '200',
+    errorMessage: null,
+    showType: 0,
+  };
+
+  return res.send(result);
 }
 
 function postPermission(req: Request, res: Response, u: string, b: Request) {
@@ -145,7 +186,7 @@ function postPermission(req: Request, res: Response, u: string, b: Request) {
 
 export default {
   'GET /api/permission/query': getPermission,
-  'GET /api/permission/show': getPermission,
+  'GET /api/permission/show': showPermission,
   'POST /api/permission/create': postPermission,
   'DELETE /api/permission/remove': postPermission,
   'PUT /api/permission/update': postPermission,

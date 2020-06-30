@@ -2,19 +2,19 @@ import { request } from 'umi';
 import { TableListParams, TableListItem } from '@/services/permission.d';
 
 export async function queryPermission(params?: TableListParams) {
-  return request('/api/permission/query', {
+  return request<API.response>('/api/permission/query', {
     params,
   });
 }
 
 export async function showPermission(params?: TableListParams) {
-  return request('/api/permission/show', {
+  return request<API.response>('/api/permission/show', {
     params,
   });
 }
 
 export async function removePermission(params: { id: string[] }) {
-  return request('/api/permission/remove', {
+  return request<API.response>('/api/permission/remove', {
     method: 'DELETE',
     data: {
       ...params,
@@ -23,7 +23,7 @@ export async function removePermission(params: { id: string[] }) {
 }
 
 export async function createPermission(params: TableListItem) {
-  return request('/api/permission/create', {
+  return request<API.response>('/api/permission/create', {
     method: 'POST',
     data: {
       ...params,
@@ -32,7 +32,7 @@ export async function createPermission(params: TableListItem) {
 }
 
 export async function updatePermission(params: TableListItem) {
-  return request('/api/permission/update', {
+  return request<API.response>('/api/permission/update', {
     method: 'PUT',
     data: {
       ...params,
