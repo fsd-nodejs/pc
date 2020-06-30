@@ -14,7 +14,7 @@ export async function showPermission(params?: TableListParams) {
 }
 
 export async function removePermission(params: { id: string[] }) {
-  return request<API.response>('/api/permission/remove', {
+  return request('/api/permission/remove', {
     method: 'DELETE',
     data: {
       ...params,

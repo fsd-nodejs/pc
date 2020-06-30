@@ -22,7 +22,7 @@ export default {
   // 支持值为 Object 和 Array
   'GET /api/currentUser': (req: Request, res: Response) => {
     if (!getAccess()) {
-      res.status(401).send({
+      res.status(401).json({
         success: false,
         data: {
           isLogin: false,
@@ -33,7 +33,7 @@ export default {
       });
       return;
     }
-    res.send({
+    res.json({
       success: true,
       data: {
         name: 'Serati Ma',
@@ -127,7 +127,7 @@ export default {
     const { password, username, type } = req.body;
     if (password === 'ant.design' && username === 'admin') {
       setTimeout(() => {
-        res.send({
+        res.json({
           success: true,
           data: {
             status: 'ok',
@@ -143,7 +143,7 @@ export default {
       return;
     }
     if (password === 'ant.design' && username === 'user') {
-      res.send({
+      res.json({
         success: true,
         data: {
           status: 'ok',
@@ -158,7 +158,7 @@ export default {
       return;
     }
     if (type === 'mobile') {
-      res.send({
+      res.json({
         success: true,
         data: {
           status: 'ok',
@@ -172,7 +172,7 @@ export default {
       return;
     }
 
-    res.send({
+    res.json({
       success: true,
       data: {
         status: 'error',
@@ -187,7 +187,7 @@ export default {
   },
   'GET /api/login/outLogin': (req: Request, res: Response) => {
     access = '';
-    res.send({
+    res.json({
       success: true,
       data: {},
       errorCode: '200',
@@ -196,7 +196,7 @@ export default {
     });
   },
   'POST /api/register': (req: Request, res: Response) => {
-    res.send({
+    res.json({
       success: true,
       data: {
         status: 'ok',
@@ -209,7 +209,7 @@ export default {
     });
   },
   'GET /api/500': (req: Request, res: Response) => {
-    res.status(500).send({
+    res.status(500).json({
       success: false,
       data: null,
       errorCode: 500,
@@ -218,7 +218,7 @@ export default {
     });
   },
   'GET /api/404': (req: Request, res: Response) => {
-    res.status(404).send({
+    res.status(404).json({
       success: true,
       data: null,
       errorCode: 404,
@@ -227,7 +227,7 @@ export default {
     });
   },
   'GET /api/403': (req: Request, res: Response) => {
-    res.status(403).send({
+    res.status(403).json({
       success: true,
       data: null,
       errorCode: 403,
@@ -236,7 +236,7 @@ export default {
     });
   },
   'GET /api/401': (req: Request, res: Response) => {
-    res.status(401).send({
+    res.status(401).json({
       success: true,
       data: null,
       errorCode: 401,

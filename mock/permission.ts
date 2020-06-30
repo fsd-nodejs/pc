@@ -97,7 +97,7 @@ function showPermission(req: Request, res: Response, u: string) {
     dataSource = dataSource.filter((data) => data.id.includes(params.id || ''));
   }
   if (dataSource.length === 0) {
-    return res.json({
+    return res.status(404).json({
       success: true,
       data: null,
       errorCode: '404',
@@ -131,7 +131,10 @@ function postPermission(req: Request, res: Response, u: string, b: Request) {
     /* eslint no-case-declarations:0 */
     case 'DELETE':
       tableListDataSource = tableListDataSource.filter((item) => id.indexOf(item.id) === -1);
-      break;
+      (() => {
+        return res.status(204);
+      })();
+      return;
     case 'POST':
       (() => {
         const newPermission = {
@@ -145,7 +148,13 @@ function postPermission(req: Request, res: Response, u: string, b: Request) {
           createdAt: new Date(),
         };
         tableListDataSource.unshift(newPermission);
-        return res.json(newPermission);
+        return res.status(201).json({
+          success: true,
+          data: newPermission,
+          errorCode: '201',
+          errorMessage: null,
+          showType: 0,
+        });
       })();
       return;
 
@@ -167,7 +176,13 @@ function postPermission(req: Request, res: Response, u: string, b: Request) {
           }
           return item;
         });
-        return res.json(newPermission);
+        return res.status(201).json({
+          success: true,
+          data: newPermission,
+          errorCode: '201',
+          errorMessage: null,
+          showType: 0,
+        });
       })();
       return;
     default:
