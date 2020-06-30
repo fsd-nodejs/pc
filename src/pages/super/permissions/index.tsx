@@ -10,6 +10,7 @@ import {
   updatePermission,
   createPermission,
   removePermission,
+  showPermission,
 } from '@/services/permission';
 import { TableListItem } from '@/services/permission.d';
 import CreateForm from './components/CreateForm';
@@ -54,6 +55,24 @@ const handleUpdate = async (fields: TableListItem) => {
   } catch (error) {
     hide();
     message.error('更新失败请重试！');
+    return false;
+  }
+};
+
+/**
+ * 查看
+ * @param record
+ */
+const handleShow = async (record: TableListItem) => {
+  const hide = message.loading('正在加载数据');
+  try {
+    const data = await (await showPermission({ id: record.id })).data;
+    hide();
+    message.success('加载成功');
+    return data;
+  } catch (error) {
+    hide();
+    message.error('加载失败请重试！');
     return false;
   }
 };
@@ -229,18 +248,26 @@ export default () => {
       render: (_, record) => (
         <>
           <a
-            onClick={() => {
-              setUpdateModalVisible(true);
-              setCurrentFormValues(record);
+            onClick={async () => {
+              // 编辑前去服务端获取最新的数据
+              const success = await handleShow(record);
+              if (success) {
+                setUpdateModalVisible(true);
+                setCurrentFormValues(Object.assign(record, success));
+              }
             }}
           >
             编辑
           </a>
           <Divider type="vertical" />
           <a
-            onClick={() => {
-              setDetailModalVisible(true);
-              setCurrentFormValues(record);
+            onClick={async () => {
+              // 查看前去服务端获取最新的数据
+              const success = await handleShow(record);
+              if (success) {
+                setDetailModalVisible(true);
+                setCurrentFormValues(record);
+              }
             }}
           >
             查看
@@ -250,6 +277,7 @@ export default () => {
             title="你确定要删除该数据吗?"
             placement="left"
             onConfirm={async () => {
+              // 不论是否删除成功，都重新加载列表数据
               await handleRemove([record]);
               actionRef?.current?.reload();
             }}
@@ -382,7 +410,7 @@ export default () => {
       {currentFormValues && Object.keys(currentFormValues).length ? (
         <DetailForm
           onCancel={() => {
-            setUpdateModalVisible(false);
+            setDetailModalVisible(false);
             setCurrentFormValues({});
           }}
           detailModalVisible={detailModalVisible}

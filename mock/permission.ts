@@ -68,7 +68,10 @@ function getPermission(req: Request, res: Response, u: string) {
   const result = {
     success: true,
     data: {
-      list: dataSource,
+      list: dataSource.map((item) => {
+        const { desc, ...data } = item;
+        return data;
+      }),
       total: tableListDataSource.length,
       pageSize,
       current: parseInt(`${params.currentPage}`, 10) || 1,
@@ -130,9 +133,9 @@ function postPermission(req: Request, res: Response, u: string, b: Request) {
   switch (method) {
     /* eslint no-case-declarations:0 */
     case 'DELETE':
-      tableListDataSource = tableListDataSource.filter((item) => id.indexOf(item.id) === -1);
       (() => {
-        return res.status(204);
+        tableListDataSource = tableListDataSource.filter((item) => id.indexOf(item.id) === -1);
+        return res.status(204).send();
       })();
       return;
     case 'POST':
