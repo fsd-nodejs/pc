@@ -21,7 +21,7 @@ export interface TableListData {
 }
 
 export interface TableListParams {
-  id?: numver; // 自增id
+  id?: number; // 自增id
   name?: string; // 名称
   slug?: string; // 标识
   httpMethod?: string; // 请求方式
