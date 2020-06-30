@@ -161,9 +161,17 @@ export default () => {
     },
     {
       title: '路由',
-      dataIndex: 'httpRoute',
+      dataIndex: 'httpMethod',
       hideInSearch: true,
       hideInForm: true,
+      valueEnum: {
+        GET: { text: 'GET', status: 'Default' },
+        POST: { text: 'POST', status: 'Default' },
+        PUT: { text: 'PUT', status: 'Default' },
+        DELETE: { text: 'DELETE', status: 'Default' },
+        PATCH: { text: 'PATCH', status: 'Default' },
+        OPTIONS: { text: 'OPTIONS', status: 'Default' },
+      },
       rules: [
         {
           required: true,
