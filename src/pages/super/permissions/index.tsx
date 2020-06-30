@@ -266,7 +266,7 @@ export default () => {
               const success = await handleShow(record);
               if (success) {
                 setDetailModalVisible(true);
-                setCurrentFormValues(record);
+                setCurrentFormValues(success);
               }
             }}
           >
@@ -294,6 +294,7 @@ export default () => {
 
   return (
     <PageHeaderWrapper content="" className={styles.main}>
+      {/* 列表 */}
       <ProTable<TableListItem>
         headerTitle="查询表格"
         actionRef={actionRef}
@@ -415,6 +416,7 @@ export default () => {
           }}
           detailModalVisible={detailModalVisible}
           values={currentFormValues}
+          columns={columns}
         />
       ) : null}
     </PageHeaderWrapper>
