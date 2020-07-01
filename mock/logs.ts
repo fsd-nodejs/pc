@@ -61,6 +61,10 @@ function getLogs(req: Request, res: Response, u: string) {
   if (params.path) {
     dataSource = dataSource.filter((data) => data.path.includes(params.path || ''));
   }
+
+  if (params.ip) {
+    dataSource = dataSource.filter((data) => data.ip?.includes(params.ip || ''));
+  }
   const result = {
     success: true,
     data: {

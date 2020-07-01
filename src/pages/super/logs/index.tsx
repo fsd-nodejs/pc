@@ -118,8 +118,7 @@ export default () => {
     },
     {
       title: 'IP',
-      dataIndex: 'input',
-      hideInSearch: true,
+      dataIndex: 'ip',
       render: (_, record: TableListItem) => <Tag color="#108ee9">{record.ip}</Tag>,
     },
     {
