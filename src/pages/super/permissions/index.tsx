@@ -349,7 +349,10 @@ export default () => {
       />
 
       {/* 创建 */}
-      <CreateForm onCancel={() => setCreateModalVisible(false)} modalVisible={createModalVisible}>
+      <CreateForm
+        onCancel={() => setCreateModalVisible(false)}
+        createModalVisible={createModalVisible}
+      >
         <ProTable<TableListItem, TableListItem>
           onSubmit={async (value) => {
             const success = await handleCreate(value);

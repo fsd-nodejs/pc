@@ -1,11 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Divider, Dropdown, Menu, message, Tag, Popconfirm } from 'antd';
+import { Button, Divider, Dropdown, Menu, message, Tag, Popconfirm, Transfer } from 'antd';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { SorterResult } from 'antd/es/table/interface';
+import { useRequest } from 'umi';
 
 import { queryRole, updateRole, createRole, removeRole, showRole } from '@/services/role';
+import { queryPermission } from '@/services/permission';
 import { TableListItem } from '@/services/role.d';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
@@ -97,6 +99,11 @@ export default () => {
   const [showModalVisible, setShowModalVisible] = useState<boolean>(false);
   const [currentFormValues, setCurrentFormValues] = useState({});
   const actionRef = useRef<ActionType>();
+
+  const { data: permissionData, loading, error } = useRequest(() => {
+    return queryPermission({ pageSize: 1000 });
+  });
+
   const columns: ProColumns<TableListItem>[] = [
     {
       title: 'ID',
@@ -140,9 +147,32 @@ export default () => {
       title: '权限',
       dataIndex: 'permissions',
       hideInSearch: true,
-      hideInForm: true,
+      renderFormItem: (item, { defaultRender, value, ...rest }) => {
+        if (error) {
+          return <div>failed to load</div>;
+        }
+        if (loading) {
+          return <div>loading...</div>;
+        }
+        return (
+          <Transfer
+            {...rest}
+            titles={['待选', '已选']}
+            listStyle={{
+              width: 300,
+              height: 300,
+            }}
+            dataSource={permissionData.list}
+            targetKeys={value}
+            showSearch
+            rowKey={(row: any) => row.id}
+            render={(row: any) => row.name}
+            pagination
+          />
+        );
+      },
       render: (_, record: TableListItem) =>
-        record.permissions.map((item, index) => (
+        record.permissions?.map((item, index) => (
           <Tag key={index} color="#87d068" style={{ marginBottom: 8 }}>
             {item.name}
           </Tag>
@@ -274,7 +304,10 @@ export default () => {
       />
 
       {/* 创建 */}
-      <CreateForm onCancel={() => setCreateModalVisible(false)} modalVisible={createModalVisible}>
+      <CreateForm
+        onCancel={() => setCreateModalVisible(false)}
+        createModalVisible={createModalVisible}
+      >
         <ProTable<TableListItem, TableListItem>
           onSubmit={async (value) => {
             const success = await handleCreate(value);

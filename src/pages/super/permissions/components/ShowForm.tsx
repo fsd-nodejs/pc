@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Form, Input } from 'antd';
 import { ProColumns } from '@ant-design/pro-table/lib/Table.d';
+
 import { TableListItem } from '@/services/permission.d';
 
 interface ShowFormProps {
