@@ -100,6 +100,7 @@ export default () => {
   const [currentFormValues, setCurrentFormValues] = useState({});
   const actionRef = useRef<ActionType>();
 
+  // 预先加载权限选择器数据
   const { data: permissionData, loading, error } = useRequest(() => {
     return queryPermission({ pageSize: 1000 });
   });
@@ -148,6 +149,7 @@ export default () => {
       dataIndex: 'permissions',
       hideInSearch: true,
       renderFormItem: (item, { defaultRender, value, ...rest }) => {
+        // 过滤默认选择的数据格式
         const newValue = value?.map((row: any) => row.id || row);
         if (error) {
           return <div>failed to load</div>;
