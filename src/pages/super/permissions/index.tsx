@@ -165,6 +165,7 @@ export default () => {
             <Option value="DELETE">DELETE</Option>
             <Option value="PATCH">PATCH</Option>
             <Option value="OPTIONS">OPTIONS</Option>
+            <Option value="HEAD">HEAD</Option>
           </Select>
         );
       },
@@ -194,6 +195,7 @@ export default () => {
         DELETE: { text: 'DELETE', status: 'Default' },
         PATCH: { text: 'PATCH', status: 'Default' },
         OPTIONS: { text: 'OPTIONS', status: 'Default' },
+        HEAD: { text: 'HEAD', status: 'Default' },
       },
       rules: [
         {

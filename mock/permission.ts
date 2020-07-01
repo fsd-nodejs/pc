@@ -15,7 +15,9 @@ const genList = (current: number, pageSize: number) => {
       id: index.toString(),
       name: mockjs.Random.name(),
       slug: mockjs.Random.name(),
-      httpMethod: [mockjs.Random.pick(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'])],
+      httpMethod: [
+        mockjs.Random.pick(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD']),
+      ],
       httpPath: mockjs.Random.url().split(':/')[1],
       desc: mockjs.Random.paragraph(1, 4),
       updatedAt: new Date(),
