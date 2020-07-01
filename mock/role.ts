@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 // eslint-disable-next-line
 import mockjs from 'mockjs';
 import { parse } from 'url';
-import { TableListItem, TableListParams } from '@/services/permission.d';
+import { TableListItem, TableListParams } from '@/services/role.d';
 
 // mock tableListDataSource
 const genList = (current: number, pageSize: number) => {
@@ -15,21 +15,18 @@ const genList = (current: number, pageSize: number) => {
       id: index.toString(),
       name: mockjs.Random.name(),
       slug: mockjs.Random.name(),
-      httpMethod: [mockjs.Random.pick(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'])],
-      httpPath: mockjs.Random.url().split(':/')[1],
-      desc: mockjs.Random.paragraph(1, 4),
+      permissions: [mockjs.mock({ 'id|+1': 1, name: '@FIRST' })],
       updatedAt: new Date(),
       createdAt: new Date(),
     });
   }
-
   tableListDataSource.reverse();
   return tableListDataSource;
 };
 
-let tableListDataSource = genList(1, 15);
+let tableListDataSource = genList(1, 100);
 
-function getPermission(req: Request, res: Response, u: string) {
+function getRole(req: Request, res: Response, u: string) {
   let realUrl = u;
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
     realUrl = req.url;
@@ -62,16 +59,10 @@ function getPermission(req: Request, res: Response, u: string) {
     dataSource = dataSource.filter((data) => data.name.includes(params.name || ''));
   }
 
-  if (params.httpPath) {
-    dataSource = dataSource.filter((data) => data.httpPath.includes(params.httpPath || ''));
-  }
   const result = {
     success: true,
     data: {
-      list: dataSource.map((item) => {
-        const { desc, ...data } = item;
-        return data;
-      }),
+      list: dataSource,
       total: tableListDataSource.length,
       pageSize,
       current: parseInt(`${params.currentPage}`, 10) || 1,
@@ -84,7 +75,7 @@ function getPermission(req: Request, res: Response, u: string) {
   return res.json(result);
 }
 
-function showPermission(req: Request, res: Response, u: string) {
+function showRole(req: Request, res: Response, u: string) {
   let realUrl = u;
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
     realUrl = req.url;
@@ -120,7 +111,7 @@ function showPermission(req: Request, res: Response, u: string) {
   return res.send(result);
 }
 
-function postPermission(req: Request, res: Response, u: string, b: Request) {
+function postRole(req: Request, res: Response, u: string, b: Request) {
   let realUrl = u;
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
     realUrl = req.url;
@@ -128,7 +119,7 @@ function postPermission(req: Request, res: Response, u: string, b: Request) {
   const { method } = req;
 
   const body = (b && b.body) || req.body;
-  const { name, desc, id, httpMethod, httpPath, slug } = body;
+  const { id, name, slug, permissions } = body;
 
   switch (method) {
     /* eslint no-case-declarations:0 */
@@ -140,20 +131,18 @@ function postPermission(req: Request, res: Response, u: string, b: Request) {
       return;
     case 'POST':
       (() => {
-        const newPermission = {
+        const newRole = {
           id: tableListDataSource.length.toString(),
           name,
           slug,
-          httpMethod,
-          httpPath,
-          desc,
+          permissions,
           updatedAt: new Date(),
           createdAt: new Date(),
         };
-        tableListDataSource.unshift(newPermission);
+        tableListDataSource.unshift(newRole);
         return res.status(201).json({
           success: true,
-          data: newPermission,
+          data: newRole,
           errorCode: '201',
           errorMessage: null,
           showType: 0,
@@ -163,25 +152,23 @@ function postPermission(req: Request, res: Response, u: string, b: Request) {
 
     case 'PUT':
       (() => {
-        let newPermission = {};
+        let newRole = {};
         tableListDataSource = tableListDataSource.map((item) => {
           if (item.id === id) {
-            newPermission = {
+            newRole = {
               ...item,
               name,
               slug,
-              httpMethod,
-              httpPath,
-              desc,
+              permissions,
               updatedAt: new Date(),
             };
-            return { ...item, ...newPermission };
+            return { ...item, ...newRole };
           }
           return item;
         });
         return res.status(201).json({
           success: true,
-          data: newPermission,
+          data: newRole,
           errorCode: '201',
           errorMessage: null,
           showType: 0,
@@ -203,9 +190,9 @@ function postPermission(req: Request, res: Response, u: string, b: Request) {
 }
 
 export default {
-  'GET /api/permission/query': getPermission,
-  'GET /api/permission/show': showPermission,
-  'POST /api/permission/create': postPermission,
-  'DELETE /api/permission/remove': postPermission,
-  'PUT /api/permission/update': postPermission,
+  'GET /api/role/query': getRole,
+  'GET /api/role/show': showRole,
+  'POST /api/role/create': postRole,
+  'DELETE /api/role/remove': postRole,
+  'PUT /api/role/update': postRole,
 };
