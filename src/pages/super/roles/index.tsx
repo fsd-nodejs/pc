@@ -148,6 +148,7 @@ export default () => {
       dataIndex: 'permissions',
       hideInSearch: true,
       renderFormItem: (item, { defaultRender, value, ...rest }) => {
+        const newValue = value?.map((row: any) => row.id || row);
         if (error) {
           return <div>failed to load</div>;
         }
@@ -163,7 +164,7 @@ export default () => {
               height: 300,
             }}
             dataSource={permissionData.list}
-            targetKeys={value}
+            targetKeys={newValue}
             showSearch
             rowKey={(row: any) => row.id}
             render={(row: any) => row.name}

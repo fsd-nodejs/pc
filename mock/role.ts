@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Request, Response } from 'express';
 // eslint-disable-next-line
-import mockjs from 'mockjs';
+import mockjs, { mock } from 'mockjs';
 import { parse } from 'url';
 import { TableListItem, TableListParams } from '@/services/role.d';
 
@@ -15,7 +15,12 @@ const genList = (current: number, pageSize: number) => {
       id: index.toString(),
       name: mockjs.Random.name(),
       slug: mockjs.Random.name(),
-      permissions: [mockjs.mock({ 'id|+1': 1, name: '@FIRST' })],
+      permissions: [
+        mockjs.mock({
+          id: mockjs.Random.pick(['1', '2', '3', '4', '5', '6', '7', '8', '9']),
+          name: '@FIRST',
+        }),
+      ],
       updatedAt: new Date(),
       createdAt: new Date(),
     });
@@ -138,11 +143,11 @@ function postRole(req: Request, res: Response, u: string, b: Request) {
           name,
           slug,
           permissions: global.permissions
-            ?.filter((item: any) => permissions.includes(item.id))
-            .map((item: any) => {
+            ?.filter((row: any) => permissions.includes(row.id))
+            .map((row: any) => {
               return {
-                id: item.id,
-                name: item.name,
+                id: row.id,
+                name: row.name,
               };
             }),
           updatedAt: new Date(),
@@ -168,7 +173,14 @@ function postRole(req: Request, res: Response, u: string, b: Request) {
               ...item,
               name,
               slug,
-              permissions,
+              permissions: global.permissions
+                ?.filter((row: any) => permissions.includes(row.id))
+                .map((row: any) => {
+                  return {
+                    id: row.id,
+                    name: row.name,
+                  };
+                }),
               updatedAt: new Date(),
             };
             return { ...item, ...newRole };
