@@ -15,7 +15,7 @@ import {
 import { TableListItem } from '@/services/permission.d';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
-import DetailForm from './components/DetailForm';
+import ShowForm from './components/ShowForm';
 
 import styles from './index.less';
 
@@ -66,7 +66,7 @@ const handleUpdate = async (fields: TableListItem) => {
 const handleShow = async (record: TableListItem) => {
   const hide = message.loading('正在加载数据');
   try {
-    const data = await (await showPermission({ id: record.id })).data;
+    const { data } = await showPermission({ id: record.id });
     hide();
     message.success('加载成功');
     return data;
@@ -102,7 +102,7 @@ export default () => {
   const [sorter, setSorter] = useState<string>('');
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
   const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
-  const [detailModalVisible, setDetailModalVisible] = useState<boolean>(false);
+  const [showModalVisible, setShowModalVisible] = useState<boolean>(false);
   const [currentFormValues, setCurrentFormValues] = useState({});
   const actionRef = useRef<ActionType>();
   const columns: ProColumns<TableListItem>[] = [
@@ -265,8 +265,8 @@ export default () => {
               // 查看前去服务端获取最新的数据
               const success = await handleShow(record);
               if (success) {
-                setDetailModalVisible(true);
-                setCurrentFormValues(success);
+                setShowModalVisible(true);
+                setCurrentFormValues(Object.assign(record, success));
               }
             }}
           >
@@ -409,12 +409,12 @@ export default () => {
 
       {/* 详情 */}
       {currentFormValues && Object.keys(currentFormValues).length ? (
-        <DetailForm
+        <ShowForm
           onCancel={() => {
-            setDetailModalVisible(false);
+            setShowModalVisible(false);
             setCurrentFormValues({});
           }}
-          detailModalVisible={detailModalVisible}
+          showModalVisible={showModalVisible}
           values={currentFormValues}
           columns={columns}
         />
