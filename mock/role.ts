@@ -26,6 +26,8 @@ const genList = (current: number, pageSize: number) => {
 
 let tableListDataSource = genList(1, 100);
 
+global.roles = tableListDataSource;
+
 function getRole(req: Request, res: Response, u: string) {
   let realUrl = u;
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
@@ -135,7 +137,14 @@ function postRole(req: Request, res: Response, u: string, b: Request) {
           id: tableListDataSource.length.toString(),
           name,
           slug,
-          permissions,
+          permissions: global.permissions
+            ?.filter((item: any) => permissions.includes(item.id))
+            .map((item: any) => {
+              return {
+                id: item.id,
+                name: item.name,
+              };
+            }),
           updatedAt: new Date(),
           createdAt: new Date(),
         };

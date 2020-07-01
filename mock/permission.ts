@@ -28,6 +28,7 @@ const genList = (current: number, pageSize: number) => {
 };
 
 let tableListDataSource = genList(1, 15);
+global.permissions = tableListDataSource;
 
 function getPermission(req: Request, res: Response, u: string) {
   let realUrl = u;
