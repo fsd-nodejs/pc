@@ -182,6 +182,7 @@ export default () => {
       dataIndex: 'passwordConfirmation',
       hideInSearch: true,
       hideInTable: true,
+      validateFirst: true,
       renderFormItem: (item, { defaultRender, value, ...rest }) => {
         return <Input {...rest} type="password" />;
       },
