@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Request, Response } from 'express';
 // eslint-disable-next-line
-import mockjs, { mock } from 'mockjs';
+import mockjs from 'mockjs';
 import { parse } from 'url';
 import { TableListItem, TableListParams } from '@/services/role.d';
 

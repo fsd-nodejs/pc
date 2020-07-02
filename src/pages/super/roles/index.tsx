@@ -101,9 +101,11 @@ export default () => {
   const actionRef = useRef<ActionType>();
 
   // 预先加载权限选择器数据
-  const { data: permissionData, loading, error } = useRequest(() => {
-    return queryPermission({ pageSize: 1000 });
-  });
+  const { data: permissionData, loading: permissionLoading, error: permissionError } = useRequest(
+    () => {
+      return queryPermission({ pageSize: 1000 });
+    },
+  );
 
   const columns: ProColumns<TableListItem>[] = [
     {
@@ -113,12 +115,6 @@ export default () => {
       ellipsis: true,
       fixed: 'left',
       width: 80,
-      rules: [
-        {
-          required: true,
-          message: 'ID为必填项',
-        },
-      ],
     },
     {
       title: '标识',
@@ -151,10 +147,10 @@ export default () => {
       renderFormItem: (item, { defaultRender, value, ...rest }) => {
         // 过滤默认选择的数据格式
         const newValue = value?.map((row: any) => row.id || row);
-        if (error) {
+        if (permissionError) {
           return <div>failed to load</div>;
         }
-        if (loading) {
+        if (permissionLoading) {
           return <div>loading...</div>;
         }
         return (

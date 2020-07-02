@@ -113,12 +113,6 @@ export default () => {
       ellipsis: true,
       fixed: 'left',
       width: 80,
-      rules: [
-        {
-          required: true,
-          message: 'ID为必填项',
-        },
-      ],
     },
     {
       title: '标识',

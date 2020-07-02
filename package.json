@@ -53,6 +53,7 @@
     "@ant-design/pro-layout": "6.0.0-3",
     "@ant-design/pro-table": "^2.2.0",
     "antd": "^4.0.0",
+    "antd-img-crop": "^3.9.0",
     "classnames": "^2.2.6",
     "lodash": "^4.17.15",
     "moment": "^2.25.3",
