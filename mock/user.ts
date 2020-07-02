@@ -1,4 +1,8 @@
 import { Request, Response } from 'express';
+// eslint-disable-next-line
+import mockjs from 'mockjs';
+import { parse } from 'url';
+import { TableListItem, TableListParams } from '@/services/user.d';
 
 function getFakeCaptcha(req: Request, res: Response) {
   return res.json('captcha-xxx');
@@ -16,6 +20,247 @@ let access = ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site' ? 'adm
 const getAccess = () => {
   return access;
 };
+
+// start: 用户管理
+// mock tableListDataSource
+const genList = (current: number, pageSize: number) => {
+  const tableListDataSource: TableListItem[] = [];
+
+  for (let i = 1; i < pageSize; i += 1) {
+    const index = (current - 1) * 10 + i;
+    const name = mockjs.Random.name();
+    tableListDataSource.push({
+      id: index.toString(),
+      username: mockjs.Random.first(),
+      name,
+      avatar: mockjs.Random.image(
+        '250x250',
+        mockjs.Random.color(),
+        '#fff',
+        name.substr(0, 1).toUpperCase(),
+      ),
+      roles: [
+        mockjs.mock({
+          id: mockjs.Random.pick(['1', '2', '3', '4', '5', '6', '7', '8', '9']),
+          name: '@FIRST',
+        }),
+      ],
+      permissions: [
+        mockjs.mock({
+          id: mockjs.Random.pick(['1', '2', '3', '4', '5', '6', '7', '8', '9']),
+          name: '@FIRST',
+        }),
+      ],
+      updatedAt: new Date(),
+      createdAt: new Date(),
+    });
+  }
+  tableListDataSource.reverse();
+  return tableListDataSource;
+};
+
+let tableListDataSource = genList(1, 22);
+
+function getUser(req: Request, res: Response, u: string) {
+  let realUrl = u;
+  if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
+    realUrl = req.url;
+  }
+  const { current = 1, pageSize = 10 } = req.query;
+  const params = (parse(realUrl, true).query as unknown) as TableListParams;
+  let dataSource = [...tableListDataSource].slice(
+    ((current as number) - 1) * (pageSize as number),
+    (current as number) * (pageSize as number),
+  );
+  if (params.sorter) {
+    const s = params.sorter.split('_');
+    dataSource = dataSource.sort((prev, next) => {
+      if (s[1] === 'descend') {
+        return next[s[0]] - prev[s[0]];
+      }
+      return prev[s[0]] - next[s[0]];
+    });
+  }
+
+  if (params.id) {
+    dataSource = dataSource.filter((data) => data.id.includes(params.id || ''));
+  }
+
+  if (params.username) {
+    dataSource = dataSource.filter((data) => data.username.includes(params.username || ''));
+  }
+
+  if (params.name) {
+    dataSource = dataSource.filter((data) => data.name.includes(params.name || ''));
+  }
+
+  const result = {
+    success: true,
+    data: {
+      list: dataSource.map((item) => {
+        const { password, ...data } = item;
+        return data;
+      }),
+      total: tableListDataSource.length,
+      pageSize,
+      current: parseInt(`${params.currentPage}`, 10) || 1,
+    },
+    errorCode: '200',
+    errorMessage: null,
+    showType: 0,
+  };
+
+  return res.json(result);
+}
+
+function showUser(req: Request, res: Response, u: string) {
+  let realUrl = u;
+  if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
+    realUrl = req.url;
+  }
+  const { current = 1, pageSize = 10 } = req.query;
+  const params = (parse(realUrl, true).query as unknown) as TableListParams;
+  let dataSource = [...tableListDataSource].slice(
+    ((current as number) - 1) * (pageSize as number),
+    (current as number) * (pageSize as number),
+  );
+
+  if (params.id) {
+    dataSource = dataSource.filter((data) => data.id.includes(params.id || ''));
+  }
+  if (dataSource.length === 0) {
+    return res.status(404).json({
+      success: true,
+      data: null,
+      errorCode: '404',
+      errorMessage: '找不到对应的数据',
+      showType: 0,
+    });
+  }
+  const { password, ...data } = dataSource[0];
+  const result = {
+    success: true,
+    data: { ...data },
+    errorCode: '200',
+    errorMessage: null,
+    showType: 0,
+  };
+
+  return res.send(result);
+}
+
+function postUser(req: Request, res: Response, u: string, b: Request) {
+  let realUrl = u;
+  if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
+    realUrl = req.url;
+  }
+  const { method } = req;
+
+  const body = (b && b.body) || req.body;
+  const { id, name, username, avatar, password, roles, permissions } = body;
+
+  switch (method) {
+    /* eslint no-case-declarations:0 */
+    case 'DELETE':
+      (() => {
+        tableListDataSource = tableListDataSource.filter((item) => id.indexOf(item.id) === -1);
+        return res.status(204).send();
+      })();
+      return;
+    case 'POST':
+      (() => {
+        const newUser = {
+          id: tableListDataSource.length.toString(),
+          name,
+          username,
+          password,
+          avatar,
+          roles: global.roles
+            ?.filter((row: any) => roles.includes(row.id))
+            .map((row: any) => {
+              return {
+                id: row.id,
+                name: row.name,
+              };
+            }),
+          permissions: global.permissions
+            ?.filter((row: any) => permissions.includes(row.id))
+            .map((row: any) => {
+              return {
+                id: row.id,
+                name: row.name,
+              };
+            }),
+          updatedAt: new Date(),
+          createdAt: new Date(),
+        };
+        tableListDataSource.unshift(newUser);
+        return res.status(201).json({
+          success: true,
+          data: newUser,
+          errorCode: '201',
+          errorMessage: null,
+          showType: 0,
+        });
+      })();
+      return;
+
+    case 'PUT':
+      (() => {
+        let newUser = {};
+        tableListDataSource = tableListDataSource.map((item) => {
+          if (item.id === id) {
+            newUser = {
+              ...item,
+              name,
+              username,
+              password,
+              avatar,
+              roles: global.roles
+                ?.filter((row: any) => roles.includes(row.id))
+                .map((row: any) => {
+                  return {
+                    id: row.id,
+                    name: row.name,
+                  };
+                }),
+              permissions: global.permissions
+                ?.filter((row: any) => permissions.includes(row.id))
+                .map((row: any) => {
+                  return {
+                    id: row.id,
+                    name: row.name,
+                  };
+                }),
+              updatedAt: new Date(),
+            };
+            return { ...item, ...newUser };
+          }
+          return item;
+        });
+        return res.status(201).json({
+          success: true,
+          data: newUser,
+          errorCode: '201',
+          errorMessage: null,
+          showType: 0,
+        });
+      })();
+      return;
+    default:
+      break;
+  }
+
+  const result = {
+    list: tableListDataSource,
+    pagination: {
+      total: tableListDataSource.length,
+    },
+  };
+
+  res.json(result);
+}
+// end: 用户管理
 
 // 代码中会兼容本地 service mock 以及部署站点的静态数据
 export default {
@@ -246,4 +491,10 @@ export default {
   },
 
   'GET  /api/login/captcha': getFakeCaptcha,
+
+  'GET /api/user/query': getUser,
+  'GET /api/user/show': showUser,
+  'POST /api/user/create': postUser,
+  'DELETE /api/user/remove': postUser,
+  'PUT /api/user/update': postUser,
 };

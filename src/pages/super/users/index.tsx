@@ -138,17 +138,53 @@ export default () => {
       fixed: 'left',
       width: 80,
     },
+
     {
-      title: '账号',
-      dataIndex: 'username',
-      ellipsis: true,
-      width: 140,
-      rules: [
-        {
-          required: true,
-          message: '账号为必填项',
-        },
-      ],
+      title: '头像',
+      dataIndex: 'avatar',
+      valueType: 'avatar',
+      hideInSearch: true,
+      width: 50,
+      renderFormItem: (item, { value, onChange }) => {
+        const fileList =
+          typeof value === 'string'
+            ? [
+                {
+                  uid: '-1',
+                  status: 'done',
+                  url: value,
+                  name: value,
+                },
+              ]
+            : value || [];
+
+        return (
+          <ImgCrop rotate>
+            <Upload
+              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              listType="picture-card"
+              onChange={({ fileList: newFileList }) => onChange && onChange(newFileList)}
+              fileList={fileList}
+              onPreview={async (file: any) => {
+                let src = file.url;
+                if (!src) {
+                  src = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file.originFileObj);
+                    reader.onload = () => resolve(reader.result);
+                  });
+                }
+                const image: any = new Image();
+                image.src = src;
+                const imgWindow: any = window.open(src);
+                imgWindow.document.write(image.outerHTML);
+              }}
+            >
+              {fileList.length < 1 && '+ Upload'}
+            </Upload>
+          </ImgCrop>
+        );
+      },
     },
     {
       title: '名称',
@@ -159,6 +195,18 @@ export default () => {
         {
           required: true,
           message: '名称为必填项',
+        },
+      ],
+    },
+    {
+      title: '账号',
+      dataIndex: 'username',
+      ellipsis: true,
+      width: 140,
+      rules: [
+        {
+          required: true,
+          message: '账号为必填项',
         },
       ],
     },
@@ -202,41 +250,6 @@ export default () => {
           },
         },
       ],
-    },
-    {
-      title: '头像',
-      dataIndex: 'avatar',
-      valueType: 'avatar',
-      hideInSearch: true,
-      renderFormItem: (item, { value, onChange }) => {
-        const fileList = value || [];
-        return (
-          <ImgCrop rotate>
-            <Upload
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-              listType="picture-card"
-              onChange={({ fileList: newFileList }) => onChange && onChange(newFileList)}
-              fileList={fileList}
-              onPreview={async (file: any) => {
-                let src = file.url;
-                if (!src) {
-                  src = await new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file.originFileObj);
-                    reader.onload = () => resolve(reader.result);
-                  });
-                }
-                const image: any = new Image();
-                image.src = src;
-                const imgWindow: any = window.open(src);
-                imgWindow.document.write(image.outerHTML);
-              }}
-            >
-              {fileList.length < 1 && '+ Upload'}
-            </Upload>
-          </ImgCrop>
-        );
-      },
     },
     {
       title: '权限',
@@ -336,7 +349,7 @@ export default () => {
       fixed: 'right',
       render: (_, record) => (
         <>
-          <a
+          {/* <a
             onClick={async () => {
               // 编辑前去服务端获取最新的数据
               const success = await handleShow(record);
@@ -348,7 +361,7 @@ export default () => {
           >
             编辑
           </a>
-          <Divider type="vertical" />
+          <Divider type="vertical" /> */}
           <a
             onClick={async () => {
               // 查看前去服务端获取最新的数据
