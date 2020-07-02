@@ -192,7 +192,7 @@ export default () => {
         },
         {
           validator: (rules, value, callback) => {
-            const password = creatFormRef?.current?.getFieldValue('password');
+            const password = creatFormRef.current?.getFieldValue('password');
             if (password !== value) {
               callback('两次密码输入不一致');
             } else {
