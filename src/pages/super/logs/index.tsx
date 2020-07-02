@@ -33,6 +33,42 @@ const handleRemove = async (selectedRows: TableListItem[]) => {
   }
 };
 
+const MethodTag: React.FC<{ text: string }> = ({ text }) => {
+  let color = '#108ee9';
+  switch (text) {
+    case 'ANY':
+      color = '#108ee9';
+      break;
+    case 'GET':
+      color = '#52c41a';
+      break;
+    case 'POST':
+      color = '#faad14';
+      break;
+    case 'PUT':
+      color = '#1890ff';
+      break;
+    case 'DELETE':
+      color = '#ff4d4f';
+      break;
+    case 'PATCH':
+      color = '#13c2c2';
+      break;
+    case 'OPTIONS':
+      color = '#2f54eb';
+      break;
+    case 'HEAD':
+      color = 'lime';
+      break;
+    default:
+  }
+  return (
+    <Tag color={color} style={{ marginBottom: 8 }}>
+      {text}
+    </Tag>
+  );
+};
+
 export default () => {
   const [sorter, setSorter] = useState<string>('');
   const actionRef = useRef<ActionType>();
@@ -86,11 +122,7 @@ export default () => {
       render: (_, record: TableListItem) => (
         <>
           {record.method?.length > 0 ? (
-            record.method.map((text, index) => (
-              <Tag key={index} color="#108ee9" style={{ marginBottom: 8 }}>
-                {text}
-              </Tag>
-            ))
+            record.method.map((text, index) => <MethodTag key={index} text={text} />)
           ) : (
             <Tag color="#108ee9">ANY</Tag>
           )}
