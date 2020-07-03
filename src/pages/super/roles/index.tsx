@@ -356,7 +356,10 @@ export default () => {
             form={{
               labelCol: { span: 5 },
               wrapperCol: { span: 19 },
-              initialValues: currentFormValues,
+              initialValues: {
+                ...currentFormValues,
+                permissions: (currentFormValues as TableListItem).permissions.map((row) => row.id),
+              },
             }}
             columns={columns}
             rowSelection={{}}

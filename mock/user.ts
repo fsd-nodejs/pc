@@ -140,7 +140,11 @@ function showUser(req: Request, res: Response, u: string) {
   const { password, ...data } = dataSource[0];
   const result = {
     success: true,
-    data: { ...data },
+    data: {
+      ...data,
+      password: '$2y$10$.P9ibseb6ZRlfxqU8MJAou2fqbIsR9JGB7dXsEiShM72z1MAERm0u',
+      passwordConfirmation: '$2y$10$.P9ibseb6ZRlfxqU8MJAou2fqbIsR9JGB7dXsEiShM72z1MAERm0u',
+    },
     errorCode: '200',
     errorMessage: null,
     showType: 0,

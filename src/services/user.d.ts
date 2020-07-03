@@ -8,6 +8,7 @@ export interface TableListItem {
   name: string; // 名称
   avatar: ?string; // 头像
   password?: string; // 密码
+  passwordConfirmation?: string; // 确认密码
   roles?: RoleTableListItem[]; // 角色
   permissions?: PermissionTableListItem[]; // 权限
   updatedAt?: Date; // 更新时间

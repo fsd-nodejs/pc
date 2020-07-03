@@ -116,6 +116,7 @@ export default () => {
   const [currentFormValues, setCurrentFormValues] = useState({});
   const actionRef = useRef<ActionType>();
   const creatFormRef = useRef<FormInstance>();
+  const updateFormRef = useRef<FormInstance>();
 
   // 预先加载权限选择器数据
   const { data: permissionData, loading: permissionLoading, error: permissionError } = useRequest(
@@ -221,7 +222,7 @@ export default () => {
           message: '密码为必填项',
         },
       ],
-      renderFormItem: (item, { defaultRender, value, ...rest }) => {
+      renderFormItem: (item, { defaultRender, ...rest }) => {
         return <Input {...rest} type="password" />;
       },
     },
@@ -231,7 +232,7 @@ export default () => {
       hideInSearch: true,
       hideInTable: true,
       validateFirst: true,
-      renderFormItem: (item, { defaultRender, value, ...rest }) => {
+      renderFormItem: (item, { defaultRender, ...rest }) => {
         return <Input {...rest} type="password" />;
       },
       rules: [
@@ -241,7 +242,9 @@ export default () => {
         },
         {
           validator: (rules, value, callback) => {
-            const password = creatFormRef.current?.getFieldValue('password');
+            const password =
+              (createModalVisible && creatFormRef.current?.getFieldValue('password')) ||
+              (updateModalVisible && updateFormRef.current?.getFieldValue('password'));
             if (password !== value) {
               callback('两次密码输入不一致');
             } else {
@@ -349,7 +352,7 @@ export default () => {
       fixed: 'right',
       render: (_, record) => (
         <>
-          {/* <a
+          <a
             onClick={async () => {
               // 编辑前去服务端获取最新的数据
               const success = await handleShow(record);
@@ -361,7 +364,7 @@ export default () => {
           >
             编辑
           </a>
-          <Divider type="vertical" /> */}
+          <Divider type="vertical" />
           <a
             onClick={async () => {
               // 查看前去服务端获取最新的数据
@@ -451,34 +454,36 @@ export default () => {
       />
 
       {/* 创建 */}
-      <CreateForm
-        onCancel={() => setCreateModalVisible(false)}
-        createModalVisible={createModalVisible}
-      >
-        <ProTable<TableListItem, TableListItem>
-          formRef={creatFormRef}
-          onSubmit={async (value) => {
-            const success = await handleCreate(value);
-            if (success) {
-              setCreateModalVisible(false);
-              if (actionRef.current) {
-                actionRef.current.reload();
+      {createModalVisible ? (
+        <CreateForm
+          onCancel={() => setCreateModalVisible(false)}
+          createModalVisible={createModalVisible}
+        >
+          <ProTable<TableListItem, TableListItem>
+            formRef={creatFormRef}
+            onSubmit={async (value) => {
+              const success = await handleCreate(value);
+              if (success) {
+                setCreateModalVisible(false);
+                if (actionRef.current) {
+                  actionRef.current.reload();
+                }
               }
-            }
-          }}
-          rowKey="id"
-          type="form"
-          form={{
-            labelCol: { span: 5 },
-            wrapperCol: { span: 19 },
-          }}
-          columns={columns}
-          rowSelection={{}}
-        />
-      </CreateForm>
+            }}
+            rowKey="id"
+            type="form"
+            form={{
+              labelCol: { span: 5 },
+              wrapperCol: { span: 19 },
+            }}
+            columns={columns}
+            rowSelection={{}}
+          />
+        </CreateForm>
+      ) : null}
 
       {/* 更新 */}
-      {currentFormValues && Object.keys(currentFormValues).length ? (
+      {updateModalVisible && Object.keys(currentFormValues).length ? (
         <UpdateForm
           onCancel={() => {
             setUpdateModalVisible(false);
@@ -487,6 +492,7 @@ export default () => {
           updateModalVisible={updateModalVisible}
         >
           <ProTable<TableListItem, TableListItem>
+            formRef={updateFormRef}
             onSubmit={async (value) => {
               const success = await handleUpdate({
                 ...value,
@@ -505,7 +511,11 @@ export default () => {
             form={{
               labelCol: { span: 5 },
               wrapperCol: { span: 19 },
-              initialValues: currentFormValues,
+              initialValues: {
+                ...currentFormValues,
+                permissions: (currentFormValues as TableListItem).permissions?.map((row) => row.id),
+                roles: (currentFormValues as TableListItem).roles?.map((row) => row.id),
+              },
             }}
             columns={columns}
             rowSelection={{}}
