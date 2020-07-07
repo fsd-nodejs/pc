@@ -15,7 +15,7 @@ export default () => (
       {
         key: 'github',
         title: <GithubOutlined />,
-        href: 'https://github.com/fsd-nodejs/pc',
+        href: 'https://github.com/fsd-nodejs',
         blankTarget: true,
       },
       {
