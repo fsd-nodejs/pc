@@ -4,7 +4,6 @@ about: Create a report to help us improve
 title: ''
 labels: ''
 assignees: ''
-
 ---
 
 ### 🐛 bug 描述
@@ -33,7 +32,7 @@ assignees: ''
 
 ### © 版本信息
 
-- Ant Design Pro 版本: [e.g. 4.0.0]
+- FSD Node.js 版本: [e.g. 4.0.0]
 - umi 版本
 - 浏览器环境
 - 开发环境 [e.g. mac OS]

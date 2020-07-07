@@ -13,7 +13,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: 'Ant Design Pro',
+  title: 'FSD Node.js',
   pwa: false,
   iconfontUrl: '',
 } as LayoutSettings & {

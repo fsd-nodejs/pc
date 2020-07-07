@@ -10,7 +10,7 @@ export default defineConfig({
     hmr: true,
   },
   layout: {
-    name: 'Ant Design Pro',
+    name: 'FSD Node.js',
     locale: true,
     siderWidth: 208,
   },
