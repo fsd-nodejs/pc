@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import '@ant-design/pro-table';
 import { Card, Button } from 'antd';
 import {
   PlusSquareOutlined,
@@ -31,6 +32,8 @@ const items = [
 const renderItem = (params: any) => {
   return (
     <>
+      {params.handle}
+      {params.collapseIcon}
       <strong>{params?.item.title}</strong>&nbsp;&nbsp;
       <a href="#">{params?.item.url}</a>
       <span className="pull-right">
@@ -56,7 +59,7 @@ const renderItem = (params: any) => {
 
 export default () => {
   const nestableRef = useRef<{ collapse: (type: string | number[]) => void }>();
-  const collapse = (collapseCase: number) => {
+  const collapse = (collapseCase: number, expendIds?: number[]) => {
     if (nestableRef.current) {
       switch (collapseCase) {
         case 0:
@@ -66,7 +69,7 @@ export default () => {
           nestableRef.current?.collapse('ALL');
           break;
         case 2:
-          nestableRef.current?.collapse([1]);
+          nestableRef.current?.collapse(expendIds || []);
           break;
         default:
       }
