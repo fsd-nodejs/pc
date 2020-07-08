@@ -18,7 +18,7 @@ import Nestable from 'antd-nestable';
 import styles from './index.less';
 
 const items = [
-  { id: 0, title: 'Andy', slug: 'super.andy', url: '/super/andy' },
+  { id: 0, title: 'Andy', icon: 'smile', slug: 'super.andy', url: '/super/andy' },
   {
     id: 1,
     title: 'Menus',
@@ -34,7 +34,11 @@ const renderItem = (params: any) => {
     <>
       {params.handle}
       {params.collapseIcon}
-      <strong>{params?.item.title}</strong>&nbsp;&nbsp;
+      <strong>
+        {params?.item.icon && `[${params?.item.icon}] `}
+        {params?.item.title}
+      </strong>
+      &nbsp;&nbsp;
       <a href="#">{params?.item.url}</a>
       <span className="pull-right">
         <a
