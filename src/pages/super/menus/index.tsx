@@ -18,15 +18,74 @@ import Nestable from 'antd-nestable';
 import styles from './index.less';
 
 const items = [
-  { id: 0, title: 'Andy', icon: 'smile', slug: 'super.andy', url: '/super/andy' },
+  { id: 0, title: 'Welcome', icon: 'smile', name: 'welcome', url: '/welcome' },
   {
     id: 1,
-    title: 'Menus',
-    slug: 'super.menus',
-    url: '/super/menus',
-    children: [{ id: 2, title: 'David', slug: 'super.david', url: '/super/david' }],
+    title: 'Super',
+    icon: 'crown',
+    name: 'super',
+    url: '/super',
+    children: [
+      {
+        id: 2,
+        title: 'Users',
+        icon: 'TeamOutlined',
+        name: 'users',
+        url: '/super/users',
+      },
+      {
+        id: 3,
+        title: 'Roles',
+        icon: 'UserOutlined',
+        name: 'roles',
+        url: '/super/roles',
+      },
+      {
+        id: 4,
+        title: 'Permissions',
+        icon: 'StopOutlined',
+        name: 'permissions',
+        url: '/super/permissions',
+      },
+      {
+        id: 5,
+        title: 'Menus',
+        icon: 'MenuOutlined',
+        name: 'menus',
+        url: '/super/menus',
+      },
+      {
+        id: 8,
+        title: 'Logs',
+        icon: 'HistoryOutlined',
+        name: 'logs',
+        url: '/super/logs',
+      },
+    ],
   },
-  { id: 3, title: 'Lisa', slug: 'super.lisa', url: '/super/lisa' },
+  {
+    id: 6,
+    title: 'Admin',
+    icon: 'crown',
+    name: 'admin',
+    url: '/admin',
+    children: [
+      {
+        id: 7,
+        title: 'Sub-Page',
+        icon: 'smile',
+        name: 'sub-page',
+        url: '/admin/sub-page',
+      },
+    ],
+  },
+  {
+    id: 7,
+    title: 'Table-List',
+    icon: 'table',
+    name: 'list',
+    url: '/list',
+  },
 ];
 
 const renderItem = (params: any) => {
@@ -34,10 +93,8 @@ const renderItem = (params: any) => {
     <>
       {params.handle}
       {params.collapseIcon}
-      <strong>
-        {params?.item.icon && `[${params?.item.icon}] `}
-        {params?.item.title}
-      </strong>
+      <strong>{params?.item.title}</strong>
+      {params?.item.icon && `  [${params?.item.icon}]`}
       &nbsp;&nbsp;
       <a href="#">{params?.item.url}</a>
       <span className="pull-right">
@@ -80,7 +137,10 @@ export default () => {
     }
   };
   return (
-    <PageHeaderWrapper content="" className={styles.main}>
+    <PageHeaderWrapper
+      content="菜单管理仅做权限配置，路由注册、名称、Icon、地址配置均在前端编码完成。"
+      className={styles.main}
+    >
       <Card bodyStyle={{ padding: 0 }}>
         <ToolBar
           headerTitle="查询表格"
