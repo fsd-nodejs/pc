@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import '@ant-design/pro-table';
 import { Card, Button } from 'antd';
 import {
   PlusSquareOutlined,
@@ -12,6 +11,7 @@ import {
   ReloadOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
+import ToolBar from '@/components/ToolBar';
 
 import Nestable from 'antd-nestable';
 
@@ -78,67 +78,52 @@ export default () => {
   return (
     <PageHeaderWrapper content="" className={styles.main}>
       <Card bodyStyle={{ padding: 0 }}>
-        <div className="ant-pro-table-toolbar">
-          <div className="ant-pro-table-toolbar-title">查询表格</div>
-          <div className="ant-pro-table-toolbar-option">
-            <div className="ant-space ant-space-horizontal ant-space-align-center">
-              <div className="ant-space-item">
-                <Button type="primary" onClick={() => {}}>
-                  <PlusOutlined /> 新建
-                </Button>
-              </div>
-            </div>
-            <div className="ant-pro-table-toolbar-default-option">
-              <div className="ant-divider ant-divider-vertical" role="separator" />
-              <div className="ant-space ant-space-horizontal ant-space-align-center">
-                <div className="ant-space-item">
-                  <span
-                    className="ant-pro-table-toolbar-item-icon"
-                    title="展开"
-                    onClick={() => {
-                      collapse(0);
-                    }}
-                  >
-                    <PlusSquareOutlined />
-                  </span>
-                </div>
-                <div className="ant-space-item">
-                  <span
-                    className="ant-pro-table-toolbar-item-icon"
-                    title="折叠"
-                    onClick={() => {
-                      collapse(1);
-                    }}
-                  >
-                    <MinusSquareOutlined />
-                  </span>
-                </div>
-                <div className="ant-space-item">
-                  <span
-                    className="ant-pro-table-toolbar-item-icon"
-                    title="保存"
-                    onClick={() => {
-                      // collapse(0);
-                    }}
-                  >
-                    <SaveOutlined />
-                  </span>
-                </div>
-                <div className="ant-space-item">
-                  <span
-                    className="ant-pro-table-toolbar-item-icon"
-                    title="刷新"
-                    onClick={() => {
-                      // collapse(0);
-                    }}
-                  >
-                    <ReloadOutlined />
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ToolBar
+          headerTitle="查询表格"
+          toolBarRender={() => [
+            <Button type="primary" onClick={() => {}}>
+              <PlusOutlined /> 新建
+            </Button>,
+          ]}
+          toolBarOptionRender={() => [
+            <span
+              className="ant-pro-table-toolbar-item-icon"
+              title="展开"
+              onClick={() => {
+                collapse(0);
+              }}
+            >
+              <PlusSquareOutlined />
+            </span>,
+            <span
+              className="ant-pro-table-toolbar-item-icon"
+              title="折叠"
+              onClick={() => {
+                collapse(1);
+              }}
+            >
+              <MinusSquareOutlined />
+            </span>,
+            <span
+              className="ant-pro-table-toolbar-item-icon"
+              title="保存"
+              onClick={() => {
+                // collapse(0);
+              }}
+            >
+              <SaveOutlined />
+            </span>,
+            <span
+              className="ant-pro-table-toolbar-item-icon"
+              title="刷新"
+              onClick={() => {
+                // collapse(0);
+              }}
+            >
+              <ReloadOutlined />
+            </span>,
+          ]}
+        />
         <div className="ant-pro-table-container">
           <Nestable
             ref={nestableRef}

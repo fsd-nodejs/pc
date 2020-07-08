@@ -201,6 +201,7 @@ export default () => {
         <>
           {record.httpMethod?.length > 0 ? (
             record.httpMethod.map((text, index) => (
+              // eslint-disable-next-line react/no-array-index-key
               <Tag key={index} color="#108ee9" style={{ marginBottom: 8 }}>
                 {text}
               </Tag>

@@ -116,6 +116,7 @@ export default () => {
       render: (_, record: TableListItem) => (
         <>
           {record.method?.length > 0 ? (
+            // eslint-disable-next-line react/no-array-index-key
             record.method.map((text, index) => <MethodTag key={index} text={text} />)
           ) : (
             <Tag color="#108ee9">ANY</Tag>
