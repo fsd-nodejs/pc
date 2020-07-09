@@ -47,15 +47,14 @@ const UpdateForm: React.FC<UpdateFormProps> = () => {
         showSearch
         allowClear
         placeholder="选择权限"
-        optionFilterProp="children"
         options={permissionData?.list.map((item) => ({
           label: item.name,
           name: item.name,
           value: item.slug,
         }))}
-        filterOption={(input, option) => {
-          return option?.name?.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-        }}
+        filterOption={(input, option) =>
+          option?.name?.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        }
       />
     );
   };
