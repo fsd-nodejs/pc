@@ -8,7 +8,7 @@ export async function queryRole(params?: TableListParams) {
 }
 
 export async function showRole(params?: TableListParams) {
-  return request<API.response>('/api/role/show', {
+  return request<API.response<TableListItem>>('/api/role/show', {
     params,
   });
 }
