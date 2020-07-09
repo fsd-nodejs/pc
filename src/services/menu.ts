@@ -2,7 +2,7 @@ import { request } from 'umi';
 import { TableListParams, TableListItem } from '@/services/menu.d';
 
 export async function queryMenu(params?: TableListParams) {
-  return request<API.response>('/api/menu/query', {
+  return request<API.response<API.paginData<TableListItem>>>('/api/menu/query', {
     params,
   });
 }

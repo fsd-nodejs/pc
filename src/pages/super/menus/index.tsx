@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-
+import { useRequest } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Card, Button, Alert, Row, Col } from 'antd';
 import {
@@ -11,99 +11,101 @@ import {
   ReloadOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
+import Nestable from 'antd-nestable';
 import ToolBar from '@/components/ToolBar';
 
-import Nestable from 'antd-nestable';
+import { queryMenu } from '@/services/menu';
 
+import { arrayTransTree } from '@/utils/utils';
 import styles from './index.less';
 import UpdateForm from './components/UpdateForm';
 
-const items = [
-  {
-    id: 0,
-    name: 'welcome',
-    path: '/welcome',
-    permission: '',
-    roles: [],
-    updatedAt: '2020-07-03 06:16:11',
-  },
-  {
-    id: 1,
-    name: 'super',
-    path: '/super',
-    permission: '',
-    roles: [],
-    updatedAt: '2020-07-03 06:16:11',
-    children: [
-      {
-        id: 2,
-        name: 'users',
-        path: '/super/users',
-        permission: '',
-        roles: [],
-        updatedAt: '2020-07-03 06:16:11',
-      },
-      {
-        id: 3,
-        name: 'roles',
-        path: '/super/roles',
-        permission: '',
-        roles: [],
-        updatedAt: '2020-07-03 06:16:11',
-      },
-      {
-        id: 4,
-        name: 'permissions',
-        path: '/super/permissions',
-        permission: '',
-        roles: [],
-        updatedAt: '2020-07-03 06:16:11',
-      },
-      {
-        id: 5,
-        name: 'menus',
-        path: '/super/menus',
-        permission: '',
-        roles: [],
-        updatedAt: '2020-07-03 06:16:11',
-      },
-      {
-        id: 8,
-        name: 'logs',
-        path: '/super/logs',
-        permission: '',
-        roles: [],
-        updatedAt: '2020-07-03 06:16:11',
-      },
-    ],
-  },
-  {
-    id: 6,
-    name: 'admin',
-    path: '/admin',
-    permission: '',
-    roles: [],
-    updatedAt: '2020-07-03 06:16:11',
-    children: [
-      {
-        id: 7,
-        name: 'sub-page',
-        path: '/admin/sub-page',
-        permission: '',
-        roles: [],
-        updatedAt: '2020-07-03 06:16:11',
-      },
-    ],
-  },
-  {
-    id: 7,
-    name: 'list',
-    path: '/list',
-    permission: '',
-    roles: [],
-    updatedAt: '2020-07-03 06:16:11',
-  },
-];
+// const items = [
+//   {
+//     id: 0,
+//     name: 'welcome',
+//     path: '/welcome',
+//     permission: '',
+//     roles: [],
+//     updatedAt: '2020-07-03 06:16:11',
+//   },
+//   {
+//     id: 1,
+//     name: 'super',
+//     path: '/super',
+//     permission: '',
+//     roles: [],
+//     updatedAt: '2020-07-03 06:16:11',
+//     children: [
+//       {
+//         id: 2,
+//         name: 'users',
+//         path: '/super/users',
+//         permission: '',
+//         roles: [],
+//         updatedAt: '2020-07-03 06:16:11',
+//       },
+//       {
+//         id: 3,
+//         name: 'roles',
+//         path: '/super/roles',
+//         permission: '',
+//         roles: [],
+//         updatedAt: '2020-07-03 06:16:11',
+//       },
+//       {
+//         id: 4,
+//         name: 'permissions',
+//         path: '/super/permissions',
+//         permission: '',
+//         roles: [],
+//         updatedAt: '2020-07-03 06:16:11',
+//       },
+//       {
+//         id: 5,
+//         name: 'menus',
+//         path: '/super/menus',
+//         permission: '',
+//         roles: [],
+//         updatedAt: '2020-07-03 06:16:11',
+//       },
+//       {
+//         id: 8,
+//         name: 'logs',
+//         path: '/super/logs',
+//         permission: '',
+//         roles: [],
+//         updatedAt: '2020-07-03 06:16:11',
+//       },
+//     ],
+//   },
+//   {
+//     id: 6,
+//     name: 'admin',
+//     path: '/admin',
+//     permission: '',
+//     roles: [],
+//     updatedAt: '2020-07-03 06:16:11',
+//     children: [
+//       {
+//         id: 7,
+//         name: 'sub-page',
+//         path: '/admin/sub-page',
+//         permission: '',
+//         roles: [],
+//         updatedAt: '2020-07-03 06:16:11',
+//       },
+//     ],
+//   },
+//   {
+//     id: 9,
+//     name: 'list',
+//     path: '/list',
+//     permission: '',
+//     roles: [],
+//     updatedAt: '2020-07-03 06:16:11',
+//   },
+// ];
 
 const renderItem = (params: any) => {
   return (
@@ -136,6 +138,12 @@ const renderItem = (params: any) => {
 
 export default () => {
   const nestableRef = useRef<{ collapse: (type: string | number[]) => void }>();
+
+  // 预先加载权限选择器数据
+  const { data, loading, error } = useRequest(() => {
+    return queryMenu({ pageSize: 1000 });
+  });
+
   const collapse = (collapseCase: number, expendIds?: number[]) => {
     if (nestableRef.current) {
       switch (collapseCase) {
@@ -152,6 +160,28 @@ export default () => {
       }
     }
   };
+
+  const NestableBox = () => {
+    // 过滤默认选择的数据格式
+    if (error) {
+      return <div>failed to load</div>;
+    }
+    if (loading) {
+      return <div>loading...</div>;
+    }
+    const items = arrayTransTree(data?.list as any[], 'parentId') || [];
+    return (
+      <Nestable
+        ref={nestableRef}
+        items={items}
+        renderItem={renderItem}
+        onChange={(value: []) => {
+          console.log(value);
+        }}
+      />
+    );
+  };
+
   return (
     <PageHeaderWrapper className={styles.main}>
       <Row gutter={[24, 24]}>
@@ -220,14 +250,7 @@ export default () => {
               />
             </div>
             <div className="ant-pro-table-container">
-              <Nestable
-                ref={nestableRef}
-                items={items}
-                renderItem={renderItem}
-                onChange={(value: []) => {
-                  console.log(value);
-                }}
-              />
+              <NestableBox />
             </div>
           </Card>
         </Col>
