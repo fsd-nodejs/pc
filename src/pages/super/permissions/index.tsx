@@ -197,9 +197,9 @@ export default () => {
           message: '标识为必填项',
         },
       ],
-      render: (_, record: TableListItem) => (
-        <>
-          {record.httpMethod?.length > 0 ? (
+      render: (_, record: TableListItem) =>
+        record.httpPath?.split('\n').map((item) => [
+          record.httpMethod?.length > 0 ? (
             record.httpMethod.map((text, index) => (
               // eslint-disable-next-line react/no-array-index-key
               <Tag key={index} color="#108ee9" style={{ marginBottom: 8 }}>
@@ -208,10 +208,12 @@ export default () => {
             ))
           ) : (
             <Tag color="#108ee9">ANY</Tag>
-          )}
-          <Tag color="red">{record.httpPath}</Tag>
-        </>
-      ),
+          ),
+          <Tag color="red" key={item}>
+            {item}
+          </Tag>,
+          <br />,
+        ]),
     },
     {
       title: '描述',
