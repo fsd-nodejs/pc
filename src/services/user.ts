@@ -14,7 +14,7 @@ export async function queryNotices(): Promise<any> {
 }
 
 export async function queryUser(params?: TableListParams) {
-  return request<API.response>('/api/user/query', {
+  return request<API.response<API.paginData<TableListItem>>>('/api/user/query', {
     params,
   });
 }

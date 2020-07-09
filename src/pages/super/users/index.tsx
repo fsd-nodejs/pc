@@ -275,7 +275,7 @@ export default () => {
               width: 300,
               height: 300,
             }}
-            dataSource={permissionData.list}
+            dataSource={permissionData?.list}
             targetKeys={newValue}
             showSearch
             rowKey={(row: any) => row.id}
@@ -313,7 +313,7 @@ export default () => {
               width: 300,
               height: 300,
             }}
-            dataSource={roleData.list}
+            dataSource={roleData?.list}
             targetKeys={newValue}
             showSearch
             rowKey={(row: any) => row.id}

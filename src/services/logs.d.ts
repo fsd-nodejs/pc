@@ -18,10 +18,10 @@ export interface TableListPagination {
 }
 
 // 列表结构
-export interface TableListData {
-  list: TableListItem[];
-  pagination: Partial<TableListPagination>;
-}
+// export interface TableListData {
+//   list: TableListItem[];
+//   pagination: Partial<TableListPagination>;
+// }
 
 // 查询参数
 export interface TableListParams {

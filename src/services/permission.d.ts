@@ -1,5 +1,6 @@
 // 列表内容结构以及表单提交结构
 export interface TableListItem {
+  key: string;
   id: string; // 自增id
   name: string; // 名称
   slug: string; // 标识
@@ -18,10 +19,10 @@ export interface TableListPagination {
 }
 
 // 列表结构
-export interface TableListData {
-  list: TableListItem[];
-  pagination: Partial<TableListPagination>;
-}
+// export interface TableListData {
+//   list: TableListItem[];
+//   pagination: Partial<TableListPagination>;
+// }
 
 // 查询参数
 export interface TableListParams {

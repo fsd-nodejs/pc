@@ -2,7 +2,7 @@ import { request } from 'umi';
 import { TableListParams, TableListItem } from '@/services/role.d';
 
 export async function queryRole(params?: TableListParams) {
-  return request<API.response>('/api/role/query', {
+  return request<API.response<API.paginData<TableListItem>>>('/api/role/query', {
     params,
   });
 }
