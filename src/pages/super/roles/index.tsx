@@ -161,7 +161,7 @@ export default () => {
               width: 300,
               height: 300,
             }}
-            dataSource={permissionData?.list}
+            dataSource={permissionData?.list as any[]}
             targetKeys={newValue}
             showSearch
             rowKey={(row: any) => row.id}

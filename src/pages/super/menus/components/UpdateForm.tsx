@@ -76,7 +76,7 @@ const UpdateForm: React.FC<UpdateFormProps> = () => {
           width: 300,
           height: 300,
         }}
-        dataSource={roleData?.list}
+        dataSource={roleData?.list as any[]}
         targetKeys={newValue}
         showSearch
         rowKey={(row: any) => row.id}

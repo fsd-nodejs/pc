@@ -1,39 +1,105 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Request, Response } from 'express';
-// eslint-disable-next-line
-import mockjs from 'mockjs';
 import { parse } from 'url';
-import { TableListItem, TableListParams } from '@/services/role.d';
+import { TableListItem, TableListParams } from '@/services/menu.d';
 
 // mock tableListDataSource
-const genList = (current: number, pageSize: number) => {
-  const tableListDataSource: TableListItem[] = [];
+let tableListDataSource: TableListItem[] = [
+  {
+    id: '0',
+    name: 'welcome',
+    path: '/welcome',
+    permission: '',
+    roles: [],
+    updatedAt: new Date(),
+    parentId: '',
+  },
+  {
+    id: '1',
+    name: 'super',
+    path: '/super',
+    permission: '',
+    roles: [],
+    updatedAt: new Date(),
+    parentId: '',
+  },
+  {
+    id: '2',
+    name: 'users',
+    path: '/super/users',
+    permission: '',
+    roles: [],
+    updatedAt: new Date(),
+    parentId: '1',
+  },
+  {
+    id: '3',
+    name: 'roles',
+    path: '/super/roles',
+    permission: '',
+    roles: [],
+    updatedAt: new Date(),
+    parentId: '1',
+  },
+  {
+    id: '4',
+    name: 'permissions',
+    path: '/super/permissions',
+    permission: '',
+    roles: [],
+    updatedAt: new Date(),
+    parentId: '1',
+  },
+  {
+    id: '5',
+    name: 'menus',
+    path: '/super/menus',
+    permission: '',
+    roles: [],
+    updatedAt: new Date(),
+    parentId: '1',
+  },
+  {
+    id: '6',
+    name: 'logs',
+    path: '/super/logs',
+    permission: '',
+    roles: [],
+    updatedAt: new Date(),
+    parentId: '1',
+  },
+  {
+    id: '7',
+    name: 'admin',
+    path: '/admin',
+    permission: '',
+    roles: [],
+    updatedAt: new Date(),
+    parentId: '',
+  },
+  {
+    id: '8',
+    name: 'sub-page',
+    path: '/admin/sub-page',
+    permission: '',
+    roles: [],
+    updatedAt: new Date(),
+    parentId: '7',
+  },
+  {
+    id: '9',
+    name: 'list',
+    path: '/list',
+    permission: '',
+    roles: [],
+    updatedAt: new Date(),
+    parentId: '',
+  },
+];
 
-  for (let i = 0; i < pageSize; i += 1) {
-    const index = (current - 1) * 10 + i;
-    tableListDataSource.push({
-      id: index.toString(),
-      name: mockjs.Random.name(),
-      slug: mockjs.Random.name(),
-      permissions: [
-        mockjs.mock({
-          id: mockjs.Random.pick(['1', '2', '3', '4', '5', '6', '7', '8', '9']),
-          name: '@FIRST',
-        }),
-      ],
-      updatedAt: new Date(),
-      createdAt: new Date(),
-    });
-  }
-  tableListDataSource.reverse();
-  return tableListDataSource;
-};
+global.menus = tableListDataSource;
 
-let tableListDataSource = genList(1, 100);
-
-global.roles = tableListDataSource;
-
-function getRole(req: Request, res: Response, u: string) {
+function getMenu(req: Request, res: Response, u: string) {
   let realUrl = u;
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
     realUrl = req.url;
@@ -54,18 +120,6 @@ function getRole(req: Request, res: Response, u: string) {
     });
   }
 
-  if (params.id) {
-    dataSource = dataSource.filter((data) => data.id.includes(params.id || ''));
-  }
-
-  if (params.slug) {
-    dataSource = dataSource.filter((data) => data.slug.includes(params.slug || ''));
-  }
-
-  if (params.name) {
-    dataSource = dataSource.filter((data) => data.name.includes(params.name || ''));
-  }
-
   const result = {
     success: true,
     data: {
@@ -82,7 +136,7 @@ function getRole(req: Request, res: Response, u: string) {
   return res.json(result);
 }
 
-function showRole(req: Request, res: Response, u: string) {
+function showMenu(req: Request, res: Response, u: string) {
   let realUrl = u;
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
     realUrl = req.url;
@@ -114,7 +168,7 @@ function showRole(req: Request, res: Response, u: string) {
   return res.send(result);
 }
 
-function postRole(req: Request, res: Response, u: string, b: Request) {
+function postMenu(req: Request, res: Response, u: string, b: Request) {
   let realUrl = u;
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
     realUrl = req.url;
@@ -122,7 +176,7 @@ function postRole(req: Request, res: Response, u: string, b: Request) {
   const { method } = req;
 
   const body = (b && b.body) || req.body;
-  const { id, name, slug, permissions = [] } = body;
+  const { name, path, id, parentId, permission, roles } = body;
 
   switch (method) {
     /* eslint no-case-declarations:0 */
@@ -134,12 +188,14 @@ function postRole(req: Request, res: Response, u: string, b: Request) {
       return;
     case 'POST':
       (() => {
-        const newRole = {
+        const newMenu = {
           id: tableListDataSource.length.toString(),
           name,
-          slug,
-          permissions: global.permissions
-            ?.filter((row: any) => permissions.includes(row.id))
+          path,
+          parentId,
+          permission,
+          roles: global.roles
+            ?.filter((row: any) => roles.includes(row.id))
             .map((row: any) => {
               return {
                 id: row.id,
@@ -149,10 +205,10 @@ function postRole(req: Request, res: Response, u: string, b: Request) {
           updatedAt: new Date(),
           createdAt: new Date(),
         };
-        tableListDataSource.unshift(newRole);
+        tableListDataSource.unshift(newMenu);
         return res.status(201).json({
           success: true,
-          data: newRole,
+          data: newMenu,
           errorCode: '201',
           errorMessage: null,
           showType: 0,
@@ -162,30 +218,32 @@ function postRole(req: Request, res: Response, u: string, b: Request) {
 
     case 'PUT':
       (() => {
-        let newRole = {};
+        let newMenu = {};
         tableListDataSource = tableListDataSource.map((item) => {
           if (item.id === id) {
-            newRole = {
+            newMenu = {
               ...item,
               name,
-              slug,
-              permissions: global.permissions
-                ?.filter((row: any) => permissions.includes(row.id))
+              path,
+              parentId,
+              roles: global.roles
+                ?.filter((row: any) => roles.includes(row.id))
                 .map((row: any) => {
                   return {
                     id: row.id,
                     name: row.name,
                   };
                 }),
+              permission,
               updatedAt: new Date(),
             };
-            return { ...item, ...newRole };
+            return { ...item, ...newMenu };
           }
           return item;
         });
         return res.status(201).json({
           success: true,
-          data: newRole,
+          data: newMenu,
           errorCode: '201',
           errorMessage: null,
           showType: 0,
@@ -207,9 +265,9 @@ function postRole(req: Request, res: Response, u: string, b: Request) {
 }
 
 export default {
-  'GET /api/role/query': getRole,
-  'GET /api/role/show': showRole,
-  'POST /api/role/create': postRole,
-  'DELETE /api/role/remove': postRole,
-  'PUT /api/role/update': postRole,
+  'GET /api/menu/query': getMenu,
+  'GET /api/menu/show': showMenu,
+  'POST /api/menu/create': postMenu,
+  'DELETE /api/menu/remove': postMenu,
+  'PUT /api/menu/update': postMenu,
 };

@@ -1,6 +1,5 @@
 // 列表内容结构以及表单提交结构
 export interface TableListItem {
-  key: string;
   id: string; // 自增id
   name: string; // 名称
   slug: string; // 标识

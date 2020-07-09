@@ -118,12 +118,8 @@ function showUser(req: Request, res: Response, u: string) {
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
     realUrl = req.url;
   }
-  const { current = 1, pageSize = 10 } = req.query;
   const params = (parse(realUrl, true).query as unknown) as TableListParams;
-  let dataSource = [...tableListDataSource].slice(
-    ((current as number) - 1) * (pageSize as number),
-    (current as number) * (pageSize as number),
-  );
+  let dataSource = [...tableListDataSource];
 
   if (params.id) {
     dataSource = dataSource.filter((data) => data.id.includes(params.id || ''));
