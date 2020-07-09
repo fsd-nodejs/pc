@@ -139,7 +139,6 @@ export default () => {
       fixed: 'left',
       width: 80,
     },
-
     {
       title: '头像',
       dataIndex: 'avatar',

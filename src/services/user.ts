@@ -20,7 +20,7 @@ export async function queryUser(params?: TableListParams) {
 }
 
 export async function showUser(params?: TableListParams) {
-  return request<API.response>('/api/user/show', {
+  return request<API.response<TableListItem>>('/api/user/show', {
     params,
   });
 }
