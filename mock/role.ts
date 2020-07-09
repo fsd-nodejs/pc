@@ -91,7 +91,7 @@ function showRole(req: Request, res: Response, u: string) {
   let dataSource = [...tableListDataSource];
 
   if (params.id) {
-    dataSource = dataSource.filter((data) => data.id.includes(params.id || ''));
+    dataSource = dataSource.filter((data) => data.id === params.id);
   }
   if (dataSource.length === 0) {
     return res.status(404).json({
