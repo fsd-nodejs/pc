@@ -45,16 +45,17 @@ const UpdateForm: React.FC<UpdateFormProps> = () => {
         value={value}
         onChange={onChange}
         showSearch
-        style={{ width: 200 }}
-        placeholder="Select a person"
+        allowClear
+        placeholder="选择权限"
         optionFilterProp="children"
         options={permissionData?.list.map((item) => ({
           label: item.name,
+          name: item.name,
           value: item.slug,
         }))}
-        filterOption={(input, option) =>
-          option?.children?.toLowerCase().indexOf(input.toLowerCase()) >= 0
-        }
+        filterOption={(input, option) => {
+          return option?.name?.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+        }}
       />
     );
   };
