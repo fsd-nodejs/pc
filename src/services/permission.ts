@@ -2,7 +2,7 @@ import { request } from 'umi';
 import { TableListParams, TableListItem } from '@/services/permission.d';
 
 export async function queryPermission(params?: TableListParams) {
-  return request<API.response>('/api/permission/query', {
+  return request<API.response<API.paginData<TableListItem>>>('/api/permission/query', {
     params,
   });
 }
