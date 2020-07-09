@@ -54,7 +54,12 @@ const UpdateForm: React.FC<UpdateFormProps> = () => {
   };
 
   return (
-    <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} onFinish={onFinish}>
+    <Form
+      form={form}
+      labelCol={{ span: 5 }}
+      wrapperCol={{ span: 19 }}
+      onFinish={(values) => onFinish(values as TableListItem)}
+    >
       <Form.Item
         name="name"
         label="name"
