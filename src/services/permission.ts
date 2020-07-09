@@ -8,7 +8,7 @@ export async function queryPermission(params?: TableListParams) {
 }
 
 export async function showPermission(params?: TableListParams) {
-  return request<API.response>('/api/permission/show', {
+  return request<API.response<TableListItem>>('/api/permission/show', {
     params,
   });
 }
