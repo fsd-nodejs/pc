@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, Fragment } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Divider, Dropdown, Menu, message, Tag, Select, Popconfirm } from 'antd';
@@ -198,22 +198,25 @@ export default () => {
         },
       ],
       render: (_, record: TableListItem) =>
-        record.httpPath?.split('\n').map((item) => [
-          record.httpMethod?.length > 0 ? (
-            record.httpMethod.map((text, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <Tag key={index} color="#108ee9" style={{ marginBottom: 8 }}>
-                {text}
-              </Tag>
-            ))
-          ) : (
-            <Tag color="#108ee9">ANY</Tag>
-          ),
-          <Tag color="red" key={item}>
-            {item}
-          </Tag>,
-          <br />,
-        ]),
+        record.httpPath?.split('\n').map((item, key, array) => {
+          return (
+            // eslint-disable-next-line react/no-array-index-key
+            <Fragment key={key}>
+              {record.httpMethod?.length > 0 ? (
+                record.httpMethod.map((text, index) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <Tag key={index} color="#108ee9" style={{ marginBottom: 8 }}>
+                    {text}
+                  </Tag>
+                ))
+              ) : (
+                <Tag color="#108ee9">ANY</Tag>
+              )}
+              <Tag color="red">{item}</Tag>
+              {key !== array.length - 1 && <br />}
+            </Fragment>
+          );
+        }),
     },
     {
       title: '描述',
