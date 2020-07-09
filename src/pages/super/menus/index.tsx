@@ -140,9 +140,12 @@ export default () => {
   const nestableRef = useRef<{ collapse: (type: string | number[]) => void }>();
 
   // 预先加载权限选择器数据
-  const { data, loading, error } = useRequest(() => {
-    return queryMenu({ pageSize: 1000 });
-  });
+  const { data, loading, error, run } = useRequest(
+    () => {
+      return queryMenu({ pageSize: 1000 });
+    },
+    { throttleInterval: 500 },
+  );
 
   const collapse = (collapseCase: number, expendIds?: number[]) => {
     if (nestableRef.current) {
@@ -222,13 +225,7 @@ export default () => {
                 >
                   <SaveOutlined />
                 </span>,
-                <span
-                  className="ant-pro-table-toolbar-item-icon"
-                  title="刷新"
-                  onClick={() => {
-                    // collapse(0);
-                  }}
-                >
+                <span className="ant-pro-table-toolbar-item-icon" title="刷新" onClick={run}>
                   <ReloadOutlined />
                 </span>,
               ]}
