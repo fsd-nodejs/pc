@@ -161,7 +161,7 @@ function postUser(req: Request, res: Response, u: string, b: Request) {
   const { method } = req;
 
   const body = (b && b.body) || req.body;
-  const { id, name, username, avatar, password, roles, permissions } = body;
+  const { id, name, username, avatar, password, roles = [], permissions = [] } = body;
 
   switch (method) {
     /* eslint no-case-declarations:0 */

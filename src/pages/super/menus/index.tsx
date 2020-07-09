@@ -16,6 +16,7 @@ import ToolBar from '@/components/ToolBar';
 import Nestable from 'antd-nestable';
 
 import styles from './index.less';
+import UpdateForm from './components/UpdateForm';
 
 const items = [
   {
@@ -207,7 +208,8 @@ export default () => {
                 message={
                   <>
                     菜单管理仅做权限配置
-                    <br /> 路由注册、name、Icon、地址配置均在前端编码完成。
+                    <br /> 路由注册、name、Icon、地址配置均在前端编码完成
+                    <br />
                     左侧菜单显示的名称在locales做国际化配置
                     <br />
                     需要鉴权的页面，在 config.ts 中配置 access: &apos;canAdmin&apos; 即可走鉴权
@@ -230,7 +232,9 @@ export default () => {
           </Card>
         </Col>
         <Col md={12} sm={24}>
-          <Card />
+          <Card>
+            <UpdateForm />
+          </Card>
         </Col>
       </Row>
     </PageHeaderWrapper>

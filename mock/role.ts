@@ -126,7 +126,7 @@ function postRole(req: Request, res: Response, u: string, b: Request) {
   const { method } = req;
 
   const body = (b && b.body) || req.body;
-  const { id, name, slug, permissions } = body;
+  const { id, name, slug, permissions = [] } = body;
 
   switch (method) {
     /* eslint no-case-declarations:0 */
