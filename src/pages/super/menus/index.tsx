@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useRequest } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Button, Alert, Row, Col, message, Popconfirm, Tag } from 'antd';
+import { Card, Alert, Row, Col, message, Popconfirm, Tag } from 'antd';
 import {
   PlusSquareOutlined,
   MinusSquareOutlined,
@@ -9,7 +9,6 @@ import {
   DeleteOutlined,
   SaveOutlined,
   ReloadOutlined,
-  PlusOutlined,
 } from '@ant-design/icons';
 import Nestable from 'antd-nestable';
 import ToolBar from '@/components/ToolBar';
@@ -192,11 +191,6 @@ export default () => {
           <Card bodyStyle={{ padding: 0 }}>
             <ToolBar
               headerTitle="查询表格"
-              toolBarRender={() => [
-                <Button type="primary" onClick={() => {}}>
-                  <PlusOutlined /> 新建
-                </Button>,
-              ]}
               toolBarOptionRender={() => [
                 <span
                   className="ant-pro-table-toolbar-item-icon"
