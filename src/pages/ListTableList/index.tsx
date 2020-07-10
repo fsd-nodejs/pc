@@ -208,13 +208,11 @@ const TableList: React.FC<{}> = () => {
       {/* 创建 */}
       <CreateForm onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}>
         <ProTable<TableListItem, TableListItem>
-          onSubmit={async (value) => {
-            const success = await handleAdd(value);
+          onSubmit={async (values) => {
+            const success = await handleAdd(values);
             if (success) {
               handleModalVisible(false);
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
+              actionRef.current?.reload();
             }
           }}
           rowKey="key"
@@ -227,14 +225,12 @@ const TableList: React.FC<{}> = () => {
       {/* 更新 */}
       {stepFormValues && Object.keys(stepFormValues).length ? (
         <UpdateForm
-          onSubmit={async (value) => {
-            const success = await handleUpdate(value);
+          onSubmit={async (values) => {
+            const success = await handleUpdate(values);
             if (success) {
               handleUpdateModalVisible(false);
               setStepFormValues({});
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
+              actionRef.current?.reload();
             }
           }}
           onCancel={() => {

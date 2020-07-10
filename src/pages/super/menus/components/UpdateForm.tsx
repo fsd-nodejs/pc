@@ -1,146 +1,85 @@
-import React from 'react';
-import { Form, Input, Button, Transfer, Select } from 'antd';
-import { useRequest } from 'umi';
-import { queryPermission } from '@/services/permission';
-import { queryRole } from '@/services/role';
+import React, { forwardRef, useImperativeHandle, useEffect } from 'react';
+import { Form, Button, Space, Input, Modal } from 'antd';
 
 import { TableListItem } from '@/services/menu.d';
+import BaseFormItems from './BaseFormItems';
+
+export interface UpdateFormHandleProps {
+  reset: () => void;
+  fill: (value: TableListItem) => void;
+}
 
 interface UpdateFormProps {
-  // onCancel: () => void
+  updateModalVisible: boolean;
+  onCancel: () => void;
+  onSubmit: (value: TableListItem) => void;
+  values: TableListItem;
 }
 
-interface CustomFormItemProps {
-  value?: any;
-  onChange?: () => void;
-  id?: string;
-}
-
-const UpdateForm: React.FC<UpdateFormProps> = () => {
+const UpdateForm: React.RefForwardingComponent<UpdateFormHandleProps, UpdateFormProps> = (
+  { onSubmit, onCancel, updateModalVisible, values },
+  ref,
+) => {
   // const { onCancel } = props
   const [form] = Form.useForm();
 
-  // 预先加载权限选择器数据
-  const { data: permissionData, loading: permissionLoading, error: permissionError } = useRequest(
-    () => {
-      return queryPermission({ pageSize: 1000 });
-    },
-  );
-
-  // 预先加载角色选择器数据
-  const { data: roleData, loading: roleLoading, error: roleError } = useRequest(() => {
-    return queryRole({ pageSize: 1000 });
-  });
-
-  const PermissionsFormItem: React.FC<CustomFormItemProps> = ({ value, onChange }) => {
-    // 过滤默认选择的数据格式
-    if (permissionError) {
-      return <div>failed to load</div>;
-    }
-    if (permissionLoading) {
-      return <div>loading...</div>;
-    }
-    return (
-      <Select
-        value={value}
-        onChange={onChange}
-        showSearch
-        allowClear
-        placeholder="选择权限"
-        options={permissionData?.list.map((item) => ({
-          label: item.name,
-          name: item.name,
-          value: item.slug,
-        }))}
-        filterOption={(input, option) =>
-          option?.name?.toLowerCase().indexOf(input.toLowerCase()) >= 0
-        }
-      />
-    );
-  };
-
-  const RolesFormItem: React.FC<CustomFormItemProps> = ({ value, onChange }) => {
-    // 过滤默认选择的数据格式
-    const newValue = value?.map((row: any) => row.id || row);
-    if (roleError) {
-      return <div>failed to load</div>;
-    }
-    if (roleLoading) {
-      return <div>loading...</div>;
-    }
-    return (
-      <Transfer
-        onChange={onChange}
-        titles={['待选', '已选']}
-        listStyle={{
-          width: 300,
-          height: 300,
-        }}
-        dataSource={roleData?.list as any[]}
-        targetKeys={newValue}
-        showSearch
-        rowKey={(row: any) => row.id}
-        render={(row: any) => row.name}
-        pagination
-      />
-    );
-  };
-
   const onFinish = async (fields: TableListItem) => {
-    console.log(fields);
+    onSubmit(fields);
   };
 
   const onReset = () => {
     form?.resetFields();
   };
 
+  const onFill = (fields: TableListItem) => {
+    form.setFieldsValue(fields);
+  };
+
+  useImperativeHandle(ref, () => ({
+    reset: (): void => {
+      onReset();
+    },
+    fill: (fields: TableListItem): void => {
+      onFill(fields);
+    },
+  }));
+
+  useEffect(() => {
+    onFill(values);
+  }, [values]);
+
   return (
-    <Form
-      form={form}
-      labelCol={{ span: 4 }}
-      wrapperCol={{ span: 20 }}
-      onFinish={(values) => onFinish(values as TableListItem)}
+    <Modal
+      destroyOnClose
+      title="修改菜单"
+      visible={updateModalVisible}
+      onCancel={() => onCancel()}
+      footer={null}
+      width={768}
     >
-      <Form.Item
-        name="name"
-        label="name"
-        rules={[
-          {
-            required: true,
-            message: 'name为必填项',
-          },
-        ]}
+      <Form
+        form={form}
+        labelCol={{ span: 4 }}
+        wrapperCol={{ span: 20 }}
+        onFinish={(fileds) => onFinish(fileds as TableListItem)}
       >
-        <Input placeholder="请输入" />
-      </Form.Item>
-      <Form.Item
-        name="path"
-        label="path"
-        rules={[
-          {
-            required: true,
-            message: 'path为必填项',
-          },
-        ]}
-      >
-        <Input placeholder="请输入" />
-      </Form.Item>
-      <Form.Item name="roles" label="角色">
-        <RolesFormItem />
-      </Form.Item>
-      <Form.Item name="permission" label="权限">
-        <PermissionsFormItem />
-      </Form.Item>
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit">
-          Submit
-        </Button>
-        <Button htmlType="button" onClick={onReset}>
-          Reset
-        </Button>
-      </Form.Item>
-    </Form>
+        <Form.Item name="id" noStyle>
+          <Input type="hidden" />
+        </Form.Item>
+        <BaseFormItems disabledParentKeys={[values.id]} />
+        <Form.Item wrapperCol={{ offset: 4, span: 20 }} style={{ textAlign: 'right' }}>
+          <Space size="middle" direction="horizontal" align="center">
+            <Button htmlType="button" onClick={onReset}>
+              重置
+            </Button>
+            <Button type="primary" htmlType="submit">
+              提交
+            </Button>
+          </Space>
+        </Form.Item>
+      </Form>
+    </Modal>
   );
 };
 
-export default UpdateForm;
+export default forwardRef(UpdateForm);

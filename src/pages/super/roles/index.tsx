@@ -309,13 +309,11 @@ export default () => {
         createModalVisible={createModalVisible}
       >
         <ProTable<TableListItem, TableListItem>
-          onSubmit={async (value) => {
-            const success = await handleCreate(value);
+          onSubmit={async (values) => {
+            const success = await handleCreate(values);
             if (success) {
               setCreateModalVisible(false);
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
+              actionRef.current?.reload();
             }
           }}
           rowKey="id"
@@ -339,17 +337,15 @@ export default () => {
           updateModalVisible={updateModalVisible}
         >
           <ProTable<TableListItem, TableListItem>
-            onSubmit={async (value) => {
+            onSubmit={async (values) => {
               const success = await handleUpdate({
-                ...value,
+                ...values,
                 id: (currentFormValues as TableListItem).id,
               });
               if (success) {
                 setUpdateModalVisible(false);
                 setCurrentFormValues({});
-                if (actionRef.current) {
-                  actionRef.current.reload();
-                }
+                actionRef.current?.reload();
               }
             }}
             rowKey="id"

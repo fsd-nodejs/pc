@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useRequest } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Button, Alert, Row, Col, message, Popconfirm } from 'antd';
+import { Card, Button, Alert, Row, Col, message, Popconfirm, Tag } from 'antd';
 import {
   PlusSquareOutlined,
   MinusSquareOutlined,
@@ -14,13 +14,52 @@ import {
 import Nestable from 'antd-nestable';
 import ToolBar from '@/components/ToolBar';
 
-import { queryMenu, removeMenu } from '@/services/menu';
+import { queryMenu, createMenu, updateMenu, removeMenu } from '@/services/menu';
 import { TableListItem } from '@/services/menu.d';
 
 import { arrayTransTree } from '@/utils/utils';
 
 import styles from './index.less';
-import UpdateForm from './components/UpdateForm';
+import CreateForm, { CreateFormHandleProps } from './components/CreateForm';
+import UpdateForm, { UpdateFormHandleProps } from './components/UpdateForm';
+
+/**
+ * 添加
+ * @param fields
+ */
+const handleCreate = async (fields: TableListItem) => {
+  const hide = message.loading('正在添加');
+  try {
+    await createMenu({ ...fields });
+    hide();
+    message.success('添加成功');
+    return true;
+  } catch (error) {
+    hide();
+    message.error('添加失败请重试！');
+    return false;
+  }
+};
+
+/**
+ * 更新
+ * @param fields
+ */
+const handleUpdate = async (fields: TableListItem) => {
+  const hide = message.loading('正在更新');
+  try {
+    await updateMenu({
+      ...fields,
+    });
+    hide();
+    message.success('更新成功');
+    return true;
+  } catch (error) {
+    hide();
+    message.error('更新失败请重试！');
+    return false;
+  }
+};
 
 /**
  *  删除
@@ -44,9 +83,13 @@ const handleRemove = async (selectedRows: TableListItem[]) => {
 };
 
 export default () => {
-  const nestableRef = useRef<{ collapse: (type: string | number[]) => void }>();
+  const nestableRef = useRef<{ collapse: (type: string | number[]) => void }>(null);
+  const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
+  const [currentFormValues, setCurrentFormValues] = useState({});
+  const createFormRef = useRef<CreateFormHandleProps>(null);
+  const updateFormRef = useRef<UpdateFormHandleProps>(null);
 
-  // 预先加载权限选择器数据
+  // 加载菜单数据
   const { data, loading, error, run } = useRequest(
     () => {
       return queryMenu({ pageSize: 1000 });
@@ -63,9 +106,15 @@ export default () => {
         &nbsp;&nbsp;
         <a href="#">{params.item?.path}</a>
         <span className="pull-right">
+          {params.item?.permission && (
+            <Tag color="#87d068" style={{ marginBottom: 8 }}>
+              {params.item?.permission}
+            </Tag>
+          )}
           <a
             onClick={() => {
-              console.log('编辑');
+              setUpdateModalVisible(true);
+              setCurrentFormValues(Object.assign(params.item));
             }}
           >
             <FormOutlined />
@@ -203,11 +252,41 @@ export default () => {
           </Card>
         </Col>
         <Col md={12} sm={24}>
-          <Card>
-            <UpdateForm />
+          <Card title="新建">
+            <CreateForm
+              ref={createFormRef}
+              onSubmit={async (values) => {
+                const success = await handleCreate(values);
+                if (success) {
+                  createFormRef.current?.reset();
+                  run();
+                }
+              }}
+            />
           </Card>
         </Col>
       </Row>
+
+      {/* 更新 */}
+      {updateModalVisible && Object.keys(currentFormValues).length ? (
+        <UpdateForm
+          onCancel={() => {
+            setUpdateModalVisible(false);
+            setCurrentFormValues({});
+            updateFormRef.current?.reset();
+          }}
+          values={currentFormValues as TableListItem}
+          updateModalVisible={updateModalVisible}
+          onSubmit={async (values) => {
+            const success = await handleUpdate(values);
+            if (success) {
+              setUpdateModalVisible(false);
+              setCurrentFormValues({});
+              run();
+            }
+          }}
+        />
+      ) : null}
     </PageHeaderWrapper>
   );
 };

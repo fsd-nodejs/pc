@@ -176,7 +176,7 @@ function postMenu(req: Request, res: Response, u: string, b: Request) {
   const { method } = req;
 
   const body = (b && b.body) || req.body;
-  const { name, path, id, parentId, permission, roles } = body;
+  const { name, path, id, parentId = '', permission, roles } = body;
 
   switch (method) {
     /* eslint no-case-declarations:0 */
