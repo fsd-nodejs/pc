@@ -69,7 +69,12 @@ const UpdateForm: React.RefForwardingComponent<UpdateFormHandleProps, UpdateForm
         <BaseFormItems disabledParentKeys={[values.id]} />
         <Form.Item wrapperCol={{ offset: 4, span: 20 }} style={{ textAlign: 'right' }}>
           <Space size="middle" direction="horizontal" align="center">
-            <Button htmlType="button" onClick={onReset}>
+            <Button
+              htmlType="button"
+              onClick={() => {
+                onFill(values);
+              }}
+            >
               重置
             </Button>
             <Button type="primary" htmlType="submit">

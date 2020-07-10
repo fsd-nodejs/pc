@@ -35,6 +35,7 @@ const BaseFormItems: React.FC<{
   });
 
   const ParentFormItem: React.FC<CustomFormItemProps> = ({ value, onChange }) => {
+    const newValue = value || null;
     // 过滤默认选择的数据格式
     if (menuError) {
       return <div>failed to load</div>;
@@ -55,10 +56,10 @@ const BaseFormItems: React.FC<{
     return (
       <TreeSelect
         allowClear
-        placeholder="请选择，不选表示根节点"
+        placeholder="请选择，不选表示根节点，不可循环嵌套"
         style={{ width: '100%' }}
         dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-        value={value}
+        value={newValue}
         onChange={onChange}
         treeData={treeData}
         treeDefaultExpandAll
