@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useRequest } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Button, Alert, Row, Col } from 'antd';
+import { Card, Button, Alert, Row, Col, message, Popconfirm } from 'antd';
 import {
   PlusSquareOutlined,
   MinusSquareOutlined,
@@ -14,126 +14,33 @@ import {
 import Nestable from 'antd-nestable';
 import ToolBar from '@/components/ToolBar';
 
-import { queryMenu } from '@/services/menu';
+import { queryMenu, removeMenu } from '@/services/menu';
+import { TableListItem } from '@/services/menu.d';
 
 import { arrayTransTree } from '@/utils/utils';
+
 import styles from './index.less';
 import UpdateForm from './components/UpdateForm';
 
-// const items = [
-//   {
-//     id: 0,
-//     name: 'welcome',
-//     path: '/welcome',
-//     permission: '',
-//     roles: [],
-//     updatedAt: '2020-07-03 06:16:11',
-//   },
-//   {
-//     id: 1,
-//     name: 'super',
-//     path: '/super',
-//     permission: '',
-//     roles: [],
-//     updatedAt: '2020-07-03 06:16:11',
-//     children: [
-//       {
-//         id: 2,
-//         name: 'users',
-//         path: '/super/users',
-//         permission: '',
-//         roles: [],
-//         updatedAt: '2020-07-03 06:16:11',
-//       },
-//       {
-//         id: 3,
-//         name: 'roles',
-//         path: '/super/roles',
-//         permission: '',
-//         roles: [],
-//         updatedAt: '2020-07-03 06:16:11',
-//       },
-//       {
-//         id: 4,
-//         name: 'permissions',
-//         path: '/super/permissions',
-//         permission: '',
-//         roles: [],
-//         updatedAt: '2020-07-03 06:16:11',
-//       },
-//       {
-//         id: 5,
-//         name: 'menus',
-//         path: '/super/menus',
-//         permission: '',
-//         roles: [],
-//         updatedAt: '2020-07-03 06:16:11',
-//       },
-//       {
-//         id: 8,
-//         name: 'logs',
-//         path: '/super/logs',
-//         permission: '',
-//         roles: [],
-//         updatedAt: '2020-07-03 06:16:11',
-//       },
-//     ],
-//   },
-//   {
-//     id: 6,
-//     name: 'admin',
-//     path: '/admin',
-//     permission: '',
-//     roles: [],
-//     updatedAt: '2020-07-03 06:16:11',
-//     children: [
-//       {
-//         id: 7,
-//         name: 'sub-page',
-//         path: '/admin/sub-page',
-//         permission: '',
-//         roles: [],
-//         updatedAt: '2020-07-03 06:16:11',
-//       },
-//     ],
-//   },
-//   {
-//     id: 9,
-//     name: 'list',
-//     path: '/list',
-//     permission: '',
-//     roles: [],
-//     updatedAt: '2020-07-03 06:16:11',
-//   },
-// ];
-
-const renderItem = (params: any) => {
-  return (
-    <>
-      {params.handle}
-      {params.collapseIcon}
-      <strong>{params.item?.name}</strong>
-      &nbsp;&nbsp;
-      <a href="#">{params.item?.path}</a>
-      <span className="pull-right">
-        <a
-          onClick={() => {
-            console.log('编辑');
-          }}
-        >
-          <FormOutlined />
-        </a>
-        &nbsp;&nbsp;
-        <a
-          onClick={() => {
-            console.log('删除');
-          }}
-        >
-          <DeleteOutlined />
-        </a>
-      </span>
-    </>
-  );
+/**
+ *  删除
+ * @param selectedRows
+ */
+const handleRemove = async (selectedRows: TableListItem[]) => {
+  const hide = message.loading('正在删除');
+  if (!selectedRows) return true;
+  try {
+    await removeMenu({
+      id: selectedRows.map((row) => row.id),
+    });
+    hide();
+    message.success('删除成功，即将刷新');
+    return true;
+  } catch (error) {
+    hide();
+    message.error('删除失败，请重试');
+    return false;
+  }
 };
 
 export default () => {
@@ -146,6 +53,50 @@ export default () => {
     },
     { throttleInterval: 500 },
   );
+
+  const renderItem = (params: any) => {
+    return (
+      <>
+        {params.handle}
+        {params.collapseIcon}
+        <strong>{params.item?.name}</strong>
+        &nbsp;&nbsp;
+        <a href="#">{params.item?.path}</a>
+        <span className="pull-right">
+          <a
+            onClick={() => {
+              console.log('编辑');
+            }}
+          >
+            <FormOutlined />
+          </a>
+          &nbsp;&nbsp;
+          <Popconfirm
+            title={
+              <>
+                你确定要删除该数据吗?
+                <br />
+                删除后子节点也将同时被删除
+              </>
+            }
+            placement="left"
+            onConfirm={async () => {
+              // 不论是否删除成功，都重新加载列表数据
+              await handleRemove([params.item]);
+              run();
+            }}
+            style={{ width: 220 }}
+            okText="确定"
+            cancelText="取消"
+          >
+            <a href="#">
+              <DeleteOutlined />
+            </a>
+          </Popconfirm>
+        </span>
+      </>
+    );
+  };
 
   const collapse = (collapseCase: number, expendIds?: number[]) => {
     if (nestableRef.current) {
