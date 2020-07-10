@@ -2,13 +2,13 @@ import { request } from 'umi';
 import { TableListParams, TableListItem } from '@/services/menu.d';
 
 export async function queryMenu(params?: TableListParams) {
-  return request<API.response<API.paginData<TableListItem>>>('/api/menu/query', {
+  return request<API.Response<API.PagingData<TableListItem>>>('/api/menu/query', {
     params,
   });
 }
 
 export async function showMenu(params?: TableListParams) {
-  return request<API.response<TableListItem>>('/api/menu/show', {
+  return request<API.Response<TableListItem>>('/api/menu/show', {
     params,
   });
 }
@@ -23,7 +23,7 @@ export async function removeMenu(params: { id: string[] }) {
 }
 
 export async function createMenu(params: TableListItem) {
-  return request<API.response>('/api/menu/create', {
+  return request<API.Response>('/api/menu/create', {
     method: 'POST',
     data: {
       ...params,
@@ -32,7 +32,7 @@ export async function createMenu(params: TableListItem) {
 }
 
 export async function updateMenu(params: TableListItem) {
-  return request<API.response>('/api/menu/update', {
+  return request<API.Response>('/api/menu/update', {
     method: 'PUT',
     data: {
       ...params,

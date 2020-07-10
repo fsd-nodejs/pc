@@ -2,7 +2,7 @@ import { request } from 'umi';
 import { TableListParams, TableListItem } from '@/services/logs.d';
 
 export async function queryLogs(params?: TableListParams) {
-  return request<API.response<API.paginData<TableListItem>>>('/api/logs/query', {
+  return request<API.Response<API.PagingData<TableListItem>>>('/api/logs/query', {
     params,
   });
 }
