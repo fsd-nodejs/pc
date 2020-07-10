@@ -28,7 +28,7 @@ export interface TableListParams {
   id?: string; // 自增id
   name?: string; // 名称
   slug?: string; // 标识
-  httpMethod?: string; // 请求方式
+  httpMethod?: string[]; // 请求方式
   httpPath?: string; // 请求路径
   desc?: string; // 描述
   sorter?: string; // 排序

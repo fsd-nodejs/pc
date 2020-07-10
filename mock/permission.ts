@@ -68,6 +68,17 @@ function getPermission(req: Request, res: Response, u: string) {
   if (params.httpPath) {
     dataSource = dataSource.filter((data) => data.httpPath.includes(params.httpPath || ''));
   }
+
+  if (params.httpMethod) {
+    if (typeof params.httpMethod === 'string') {
+      params.httpMethod = [params.httpMethod];
+    }
+    dataSource = dataSource.filter(
+      (data) =>
+        (params.httpMethod?.filter((item) => data.httpMethod.includes(item)) || []).length > 0,
+    );
+  }
+
   const result = {
     success: true,
     data: {

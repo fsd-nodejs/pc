@@ -142,7 +142,6 @@ export default () => {
       title: 'HTTP方法',
       dataIndex: 'httpMethod',
       hideInTable: true,
-      hideInSearch: true,
       rules: [
         {
           required: true,
