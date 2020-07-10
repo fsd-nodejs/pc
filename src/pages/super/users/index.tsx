@@ -222,7 +222,7 @@ export default () => {
         },
       ],
       renderFormItem: (item, { defaultRender, ...rest }) => {
-        return <Input {...rest} type="password" />;
+        return <Input {...rest} type="password" placeholder="请输入" />;
       },
     },
     {
@@ -232,7 +232,7 @@ export default () => {
       hideInTable: true,
       validateFirst: true,
       renderFormItem: (item, { defaultRender, ...rest }) => {
-        return <Input {...rest} type="password" />;
+        return <Input {...rest} type="password" placeholder="请确认密码" />;
       },
       rules: [
         {
