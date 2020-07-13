@@ -44,7 +44,6 @@ export default defineConfig({
       path: '/welcome',
       name: 'welcome',
       icon: 'smile',
-      access: 'normalRouteFilter',
       component: './Welcome',
     },
     {
