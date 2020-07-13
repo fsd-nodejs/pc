@@ -124,13 +124,15 @@ export default () => {
         <span className="pull-right">
           {params.item?.permission && (
             <Tag color="#87d068" style={{ marginBottom: 8 }}>
-              {params.item?.permission}
+              {params.item.permission.name}
             </Tag>
           )}
           <a
             onClick={() => {
               setUpdateModalVisible(true);
-              setCurrentFormValues(Object.assign(params.item));
+              setCurrentFormValues(
+                Object.assign(params.item, { permission: params.item.permission.id }),
+              );
             }}
           >
             <FormOutlined />

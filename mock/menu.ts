@@ -193,7 +193,14 @@ function postMenu(req: Request, res: Response, u: string, b: Request) {
           name,
           path,
           parentId,
-          permission,
+          permission: global.permissions
+            ?.filter((row: any) => permission === row.id)
+            .map((row: any) => {
+              return {
+                id: row.id,
+                name: row.name,
+              };
+            })[0],
           roles: global.roles
             ?.filter((row: any) => roles.includes(row.id))
             .map((row: any) => {
@@ -226,6 +233,14 @@ function postMenu(req: Request, res: Response, u: string, b: Request) {
               name,
               path,
               parentId,
+              permission: global.permissions
+                ?.filter((row: any) => permission === row.id)
+                .map((row: any) => {
+                  return {
+                    id: row.id,
+                    name: row.name,
+                  };
+                })[0],
               roles: global.roles
                 ?.filter((row: any) => roles.includes(row.id))
                 .map((row: any) => {
@@ -234,7 +249,6 @@ function postMenu(req: Request, res: Response, u: string, b: Request) {
                     name: row.name,
                   };
                 }),
-              permission,
               updatedAt: new Date(),
             };
             return { ...item, ...newMenu };

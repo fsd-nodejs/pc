@@ -1,4 +1,5 @@
 import { TableListItem as RoleTableListItem } from '@/services/role.d';
+import { TableListItem as PermissionTableListItem } from '@/services/permission.d';
 
 // 列表内容结构以及表单提交结构
 export interface TableListItem {
@@ -7,7 +8,7 @@ export interface TableListItem {
   name: string; // 名称
   path: ?string; // 路径
   roles?: RoleTableListItem[]; // 角色
-  permission?: string; // 权限
+  permission?: PermissionTableListItem; // 权限
   updatedAt?: Date; // 更新时间
   createdAt?: Date; // 创建时间
 }

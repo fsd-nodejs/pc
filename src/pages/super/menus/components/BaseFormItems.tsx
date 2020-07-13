@@ -85,7 +85,7 @@ const BaseFormItems: React.FC<{
         options={permissionData?.list.map((item) => ({
           label: item.name,
           name: item.name,
-          value: item.slug,
+          value: item.id,
         }))}
         filterOption={(input, option) =>
           option?.name?.toLowerCase().indexOf(input.toLowerCase()) >= 0
