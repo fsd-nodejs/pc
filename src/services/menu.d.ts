@@ -3,7 +3,7 @@ import { TableListItem as RoleTableListItem } from '@/services/role.d';
 // 列表内容结构以及表单提交结构
 export interface TableListItem {
   id: string; // 自增id
-  parentId?: string; // 父级ID
+  parentId: string; // 父级ID
   name: string; // 名称
   path: ?string; // 路径
   roles?: RoleTableListItem[]; // 角色

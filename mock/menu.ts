@@ -176,7 +176,7 @@ function postMenu(req: Request, res: Response, u: string, b: Request) {
   const { method } = req;
 
   const body = (b && b.body) || req.body;
-  const { name, path, id, parentId = '', permission, roles } = body;
+  const { name, path, id, parentId = '', permission, roles, orders } = body;
 
   switch (method) {
     /* eslint no-case-declarations:0 */
@@ -250,6 +250,34 @@ function postMenu(req: Request, res: Response, u: string, b: Request) {
         });
       })();
       return;
+    case 'PATCH':
+      (() => {
+        tableListDataSource = tableListDataSource.map((item) => {
+          let newMenu = {};
+          orders.forEach((row: any) => {
+            if (item.id === row.id) {
+              newMenu = {
+                ...item,
+                parentId: row.parentId,
+                updatedAt: new Date(),
+              };
+            }
+          });
+          return { ...item, ...newMenu };
+        });
+        return res.status(201).json({
+          success: true,
+          data: {
+            matched: orders.length,
+            changed: orders.length,
+            warnings: 0,
+          },
+          errorCode: '201',
+          errorMessage: null,
+          showType: 0,
+        });
+      })();
+      return;
     default:
       break;
   }
@@ -270,4 +298,5 @@ export default {
   'POST /api/menu/create': postMenu,
   'DELETE /api/menu/remove': postMenu,
   'PUT /api/menu/update': postMenu,
+  'PATCH /api/menu/order': postMenu,
 };

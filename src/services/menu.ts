@@ -39,3 +39,12 @@ export async function updateMenu(params: TableListItem) {
     },
   });
 }
+
+export async function orderMenu(params: { orders: { id: string; parentId: string }[] }) {
+  return request<API.Response>('/api/menu/order', {
+    method: 'PATCH',
+    data: {
+      ...params,
+    },
+  });
+}

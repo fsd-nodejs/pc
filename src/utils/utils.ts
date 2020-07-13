@@ -25,25 +25,16 @@ export const getPageQuery = () => parse(window.location.href.split('?')[1]);
 
 /**
  * 树转数组
- * @param tree 树结构数组
- * @param key 子级数组字段名，如children
+ * @param tree 树结构数组, 子级数组字段名，如children
  * TODO: 未完成功能
  */
-// export const treeTransArray = (tree: any[], key: string) => {
-//   return tree
-//     .reduce(function (con, item) {
-//       // eslint-disable-next-line
-//       const { callee } = arguments;
-//       con.push(item);
-//       if (item[key] && item[key].length > 0) item[key].reduce(callee, con);
-//       return con;
-//     }, [])
-//     .map((item: any) => {
-//       // eslint-disable-next-line no-param-reassign
-//       item[key] = [];
-//       return item;
-//     });
-// };
+export const treeTransArray = (tree: any[], parentId: string = ''): any[] => {
+  return tree.reduce(
+    (arr, { children = [], ...item }) =>
+      arr.concat([{ ...item, parentId }], treeTransArray(children as any[], item.id)),
+    [],
+  );
+};
 
 /**
  * 数组转树

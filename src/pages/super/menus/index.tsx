@@ -13,10 +13,10 @@ import {
 import Nestable from 'antd-nestable';
 import ToolBar from '@/components/ToolBar';
 
-import { queryMenu, createMenu, updateMenu, removeMenu } from '@/services/menu';
+import { queryMenu, createMenu, updateMenu, removeMenu, orderMenu } from '@/services/menu';
 import { TableListItem } from '@/services/menu.d';
 
-import { arrayTransTree } from '@/utils/utils';
+import { arrayTransTree, treeTransArray } from '@/utils/utils';
 
 import styles from './index.less';
 import CreateForm, { CreateFormHandleProps } from './components/CreateForm';
@@ -77,6 +77,23 @@ const handleRemove = async (selectedRows: TableListItem[]) => {
   } catch (error) {
     hide();
     message.error('删除失败，请重试');
+    return false;
+  }
+};
+
+/**
+ * 保存排序
+ */
+const handleOrder = async (orders: { id: string; parentId: string }[]) => {
+  const hide = message.loading('正在保存');
+  try {
+    await orderMenu({ orders });
+    hide();
+    message.success('保存成功，即将刷新');
+    return true;
+  } catch (error) {
+    hide();
+    message.error('保存失败，请重试');
     return false;
   }
 };
@@ -172,16 +189,7 @@ export default () => {
       return <div>loading...</div>;
     }
     const items = arrayTransTree(data?.list as any[], 'parentId') || [];
-    return (
-      <Nestable
-        ref={nestableRef}
-        items={items}
-        renderItem={renderItem}
-        onChange={(value: []) => {
-          console.log(value);
-        }}
-      />
-    );
+    return <Nestable ref={nestableRef} items={items} renderItem={renderItem} />;
   };
 
   return (
@@ -213,8 +221,12 @@ export default () => {
                 <span
                   className="ant-pro-table-toolbar-item-icon"
                   title="保存"
-                  onClick={() => {
-                    // collapse(0);
+                  onClick={async () => {
+                    const rows: TableListItem[] =
+                      treeTransArray((nestableRef.current as any)?.state?.items) || [];
+                    const orders = rows.map((item) => ({ id: item.id, parentId: item.parentId }));
+                    await handleOrder(orders);
+                    run();
                   }}
                 >
                   <SaveOutlined />
