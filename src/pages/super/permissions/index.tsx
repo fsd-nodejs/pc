@@ -1,7 +1,7 @@
 import React, { useState, useRef, Fragment } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Divider, Dropdown, Menu, message, Tag, Select, Popconfirm } from 'antd';
+import { Button, Divider, Dropdown, Menu, message, Tag, Popconfirm } from 'antd';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { SorterResult } from 'antd/es/table/interface';
 
@@ -18,8 +18,6 @@ import UpdateForm from './components/UpdateForm';
 import ShowForm from './components/ShowForm';
 
 import styles from './index.less';
-
-const { Option } = Select;
 
 /**
  * 添加
@@ -148,19 +146,18 @@ export default () => {
           message: 'HTTP方法为必填项',
         },
       ],
-      renderFormItem: (item, { defaultRender, ...rest }) => {
-        return (
-          <Select {...rest} mode="multiple" style={{ width: '100%' }} placeholder="请选择HTTP方法">
-            <Option value="ANY">ANY</Option>
-            <Option value="GET">GET</Option>
-            <Option value="POST">POST</Option>
-            <Option value="PUT">PUT</Option>
-            <Option value="DELETE">DELETE</Option>
-            <Option value="PATCH">PATCH</Option>
-            <Option value="OPTIONS">OPTIONS</Option>
-            <Option value="HEAD">HEAD</Option>
-          </Select>
-        );
+      valueEnum: {
+        ANY: { text: 'ANY', status: 'Default' },
+        GET: { text: 'GET', status: 'Default' },
+        POST: { text: 'POST', status: 'Default' },
+        PUT: { text: 'PUT', status: 'Default' },
+        DELETE: { text: 'DELETE', status: 'Default' },
+        PATCH: { text: 'PATCH', status: 'Default' },
+        OPTIONS: { text: 'OPTIONS', status: 'Default' },
+        HEAD: { text: 'HEAD', status: 'Default' },
+      },
+      formItemProps: {
+        mode: 'multiple',
       },
     },
     {
@@ -180,16 +177,6 @@ export default () => {
       dataIndex: 'httpMethod',
       hideInSearch: true,
       hideInForm: true,
-      valueEnum: {
-        ANY: { text: 'ANY', status: 'Default' },
-        GET: { text: 'GET', status: 'Default' },
-        POST: { text: 'POST', status: 'Default' },
-        PUT: { text: 'PUT', status: 'Default' },
-        DELETE: { text: 'DELETE', status: 'Default' },
-        PATCH: { text: 'PATCH', status: 'Default' },
-        OPTIONS: { text: 'OPTIONS', status: 'Default' },
-        HEAD: { text: 'HEAD', status: 'Default' },
-      },
       rules: [
         {
           required: true,

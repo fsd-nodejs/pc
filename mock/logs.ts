@@ -65,6 +65,16 @@ function getLogs(req: Request, res: Response, u: string) {
   if (params.ip) {
     dataSource = dataSource.filter((data) => data.ip?.includes(params.ip || ''));
   }
+
+  if (params.method) {
+    if (typeof params.method === 'string') {
+      params.method = [params.method];
+    }
+    dataSource = dataSource.filter(
+      (data) => (params.method?.filter((item) => data.method.includes(item)) || []).length > 0,
+    );
+  }
+
   const result = {
     success: true,
     data: {

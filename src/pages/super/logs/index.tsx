@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { DownOutlined } from '@ant-design/icons';
-import { Button, Divider, Dropdown, Menu, message, Tag, Select, Popconfirm } from 'antd';
+import { Button, Divider, Dropdown, Menu, message, Tag, Popconfirm } from 'antd';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { SorterResult } from 'antd/es/table/interface';
 
@@ -9,8 +9,6 @@ import { queryLogs, removeLogs } from '@/services/logs';
 import { TableListItem } from '@/services/logs.d';
 
 import styles from './index.less';
-
-const { Option } = Select;
 
 /**
  *  删除
@@ -96,7 +94,6 @@ export default () => {
     {
       title: 'HTTP方法',
       dataIndex: 'method',
-      hideInSearch: true,
       valueEnum: {
         ANY: { text: 'ANY', status: 'Default' },
         GET: { text: 'GET', status: 'Default' },
@@ -106,6 +103,9 @@ export default () => {
         PATCH: { text: 'PATCH', status: 'Default' },
         OPTIONS: { text: 'OPTIONS', status: 'Default' },
         HEAD: { text: 'HEAD', status: 'Default' },
+      },
+      formItemProps: {
+        mode: 'multiple',
       },
       rules: [
         {
@@ -123,20 +123,6 @@ export default () => {
           )}
         </>
       ),
-      renderFormItem: (item, { defaultRender, ...rest }) => {
-        return (
-          <Select {...rest} mode="multiple" style={{ width: '100%' }} placeholder="请选择HTTP方法">
-            <Option value="ANY">ANY</Option>
-            <Option value="GET">GET</Option>
-            <Option value="POST">POST</Option>
-            <Option value="PUT">PUT</Option>
-            <Option value="DELETE">DELETE</Option>
-            <Option value="PATCH">PATCH</Option>
-            <Option value="OPTIONS">OPTIONS</Option>
-            <Option value="HEAD">HEAD</Option>
-          </Select>
-        );
-      },
     },
     {
       title: 'HTTP路径',
