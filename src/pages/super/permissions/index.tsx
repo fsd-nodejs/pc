@@ -140,6 +140,29 @@ export default () => {
       title: 'HTTP方法',
       dataIndex: 'httpMethod',
       hideInTable: true,
+      hideInForm: true,
+      rules: [
+        {
+          required: true,
+          message: 'HTTP方法为必填项',
+        },
+      ],
+      valueEnum: {
+        ANY: { text: 'ANY', status: 'Default' },
+        GET: { text: 'GET', status: 'Default' },
+        POST: { text: 'POST', status: 'Default' },
+        PUT: { text: 'PUT', status: 'Default' },
+        DELETE: { text: 'DELETE', status: 'Default' },
+        PATCH: { text: 'PATCH', status: 'Default' },
+        OPTIONS: { text: 'OPTIONS', status: 'Default' },
+        HEAD: { text: 'HEAD', status: 'Default' },
+      },
+    },
+    {
+      title: 'HTTP方法',
+      dataIndex: 'httpMethod',
+      hideInTable: true,
+      hideInSearch: true,
       rules: [
         {
           required: true,
