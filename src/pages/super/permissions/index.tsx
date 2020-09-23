@@ -117,36 +117,42 @@ export default () => {
       dataIndex: 'slug',
       ellipsis: true,
       width: 140,
-      rules: [
-        {
-          required: true,
-          message: '标识为必填项',
-        },
-      ],
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '标识为必填项',
+          },
+        ],
+      },
     },
     {
       title: '名称',
       dataIndex: 'name',
       ellipsis: true,
       width: 140,
-      rules: [
-        {
-          required: true,
-          message: '名称为必填项',
-        },
-      ],
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '名称为必填项',
+          },
+        ],
+      },
     },
     {
       title: 'HTTP方法',
       dataIndex: 'httpMethod',
       hideInTable: true,
       hideInForm: true,
-      rules: [
-        {
-          required: true,
-          message: 'HTTP方法为必填项',
-        },
-      ],
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: 'HTTP方法为必填项',
+          },
+        ],
+      },
       valueEnum: {
         ANY: { text: 'ANY', status: 'Default' },
         GET: { text: 'GET', status: 'Default' },
@@ -163,12 +169,6 @@ export default () => {
       dataIndex: 'httpMethod',
       hideInTable: true,
       hideInSearch: true,
-      rules: [
-        {
-          required: true,
-          message: 'HTTP方法为必填项',
-        },
-      ],
       valueEnum: {
         ANY: { text: 'ANY', status: 'Default' },
         GET: { text: 'GET', status: 'Default' },
@@ -180,6 +180,14 @@ export default () => {
         HEAD: { text: 'HEAD', status: 'Default' },
       },
       formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: 'HTTP方法为必填项',
+          },
+        ],
+      },
+      fieldProps: {
         mode: 'multiple',
       },
     },
@@ -188,24 +196,28 @@ export default () => {
       dataIndex: 'httpPath',
       hideInTable: true,
       valueType: 'textarea',
-      rules: [
-        {
-          required: true,
-          message: 'HTTP路径为必填项',
-        },
-      ],
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: 'HTTP路径为必填项',
+          },
+        ],
+      },
     },
     {
       title: '路由',
       dataIndex: 'httpMethod',
       hideInSearch: true,
       hideInForm: true,
-      rules: [
-        {
-          required: true,
-          message: '标识为必填项',
-        },
-      ],
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '标识为必填项',
+          },
+        ],
+      },
       render: (_, record: TableListItem) =>
         record.httpPath?.split('\n').map((item, key, array) => {
           return (
