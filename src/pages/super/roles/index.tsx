@@ -157,7 +157,14 @@ export default () => {
         }
         return (
           <Select
+            showSearch
+            allowClear
             mode="multiple"
+            filterOption={(inputValue, option) => {
+              return (option?.label as string)
+                .toLocaleLowerCase()
+                .includes(inputValue.toLocaleLowerCase());
+            }}
             options={permissionData?.list.map((item) => ({
               label: item.name,
               value: item.id,

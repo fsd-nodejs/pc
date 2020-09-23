@@ -9,9 +9,9 @@ import {
   message,
   Tag,
   Popconfirm,
-  Transfer,
   Upload,
   Input,
+  Select,
 } from 'antd';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { FormInstance } from 'antd/es/form';
@@ -174,7 +174,7 @@ export default () => {
                     reader.onload = () => resolve(reader.result);
                   });
                 }
-                const image: any = new Image();
+                const image = new Image();
                 image.src = src;
                 const imgWindow: any = window.open(src);
                 imgWindow.document.write(image.outerHTML);
@@ -191,36 +191,42 @@ export default () => {
       dataIndex: 'name',
       ellipsis: true,
       width: 140,
-      rules: [
-        {
-          required: true,
-          message: '名称为必填项',
-        },
-      ],
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '名称为必填项',
+          },
+        ],
+      },
     },
     {
       title: '账号',
       dataIndex: 'username',
       ellipsis: true,
       width: 140,
-      rules: [
-        {
-          required: true,
-          message: '账号为必填项',
-        },
-      ],
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '账号为必填项',
+          },
+        ],
+      },
     },
     {
       title: '密码',
       dataIndex: 'password',
       hideInSearch: true,
       hideInTable: true,
-      rules: [
-        {
-          required: true,
-          message: '密码为必填项',
-        },
-      ],
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '密码为必填项',
+          },
+        ],
+      },
       renderFormItem: (item, { defaultRender, ...rest }) => {
         return <Input {...rest} type="password" placeholder="请输入" />;
       },
@@ -230,36 +236,37 @@ export default () => {
       dataIndex: 'passwordConfirmation',
       hideInSearch: true,
       hideInTable: true,
-      validateFirst: true,
       renderFormItem: (item, { defaultRender, ...rest }) => {
         return <Input {...rest} type="password" placeholder="请确认密码" />;
       },
-      rules: [
-        {
-          required: true,
-          message: '确认密码为必填项',
-        },
-        {
-          validator: (rules, value, callback) => {
-            const password =
-              (createModalVisible && creatFormRef.current?.getFieldValue('password')) ||
-              (updateModalVisible && updateFormRef.current?.getFieldValue('password'));
-            if (password !== value) {
-              callback('两次密码输入不一致');
-            } else {
-              callback();
-            }
+      formItemProps: {
+        validateFirst: true,
+        rules: [
+          {
+            required: true,
+            message: '确认密码为必填项',
           },
-        },
-      ],
+          {
+            validator: (rules, value, callback) => {
+              const password =
+                (createModalVisible && creatFormRef.current?.getFieldValue('password')) ||
+                (updateModalVisible && updateFormRef.current?.getFieldValue('password'));
+              if (password !== value) {
+                callback('两次密码输入不一致');
+              } else {
+                callback();
+              }
+            },
+          },
+        ],
+      },
     },
     {
       title: '权限',
       dataIndex: 'permissions',
       hideInSearch: true,
-      renderFormItem: (item, { defaultRender, value, ...rest }) => {
+      renderFormItem: () => {
         // 过滤默认选择的数据格式
-        const newValue = value?.map((row: any) => row.id || row);
         if (permissionError) {
           return <div>failed to load</div>;
         }
@@ -267,19 +274,19 @@ export default () => {
           return <div>loading...</div>;
         }
         return (
-          <Transfer
-            {...rest}
-            titles={['待选', '已选']}
-            listStyle={{
-              width: 300,
-              height: 300,
-            }}
-            dataSource={permissionData?.list as any[]}
-            targetKeys={newValue}
+          <Select
             showSearch
-            rowKey={(row: any) => row.id}
-            render={(row: any) => row.name}
-            pagination
+            allowClear
+            mode="multiple"
+            filterOption={(inputValue, option) => {
+              return (option?.label as string)
+                .toLocaleLowerCase()
+                .includes(inputValue.toLocaleLowerCase());
+            }}
+            options={permissionData?.list.map((item) => ({
+              label: item.name,
+              value: item.id,
+            }))}
           />
         );
       },
@@ -295,9 +302,7 @@ export default () => {
       title: '角色',
       dataIndex: 'roles',
       hideInSearch: true,
-      renderFormItem: (item, { defaultRender, value, ...rest }) => {
-        // 过滤默认选择的数据格式
-        const newValue = value?.map((row: any) => row.id || row);
+      renderFormItem: () => {
         if (roleError) {
           return <div>failed to load</div>;
         }
@@ -305,19 +310,19 @@ export default () => {
           return <div>loading...</div>;
         }
         return (
-          <Transfer
-            {...rest}
-            titles={['待选', '已选']}
-            listStyle={{
-              width: 300,
-              height: 300,
-            }}
-            dataSource={roleData?.list as any[]}
-            targetKeys={newValue}
+          <Select
             showSearch
-            rowKey={(row: any) => row.id}
-            render={(row: any) => row.name}
-            pagination
+            allowClear
+            mode="multiple"
+            filterOption={(inputValue, option) => {
+              return (option?.label as string)
+                .toLocaleLowerCase()
+                .includes(inputValue.toLocaleLowerCase());
+            }}
+            options={roleData?.list.map((item) => ({
+              label: item.name,
+              value: item.id,
+            }))}
           />
         );
       },

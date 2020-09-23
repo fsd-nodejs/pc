@@ -170,7 +170,7 @@ function postUser(req: Request, res: Response, u: string, b: Request) {
     case 'POST':
       (() => {
         const newUser = {
-          id: tableListDataSource.length.toString(),
+          id: (tableListDataSource.length + 1).toString(),
           name,
           username,
           password,
