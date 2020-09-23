@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Divider, Dropdown, Menu, message, Tag, Popconfirm, Transfer } from 'antd';
+import { Button, Divider, Dropdown, Menu, message, Tag, Popconfirm, Select } from 'antd';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { SorterResult } from 'antd/es/table/interface';
 import { useRequest } from 'umi';
@@ -121,32 +121,34 @@ export default () => {
       dataIndex: 'slug',
       ellipsis: true,
       width: 140,
-      rules: [
-        {
-          required: true,
-          message: '标识为必填项',
-        },
-      ],
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '标识为必填项',
+          },
+        ],
+      },
     },
     {
       title: '名称',
       dataIndex: 'name',
       ellipsis: true,
       width: 140,
-      rules: [
-        {
-          required: true,
-          message: '名称为必填项',
-        },
-      ],
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '名称为必填项',
+          },
+        ],
+      },
     },
     {
       title: '权限',
       dataIndex: 'permissions',
       hideInSearch: true,
-      renderFormItem: (item, { defaultRender, value, ...rest }) => {
-        // 过滤默认选择的数据格式
-        const newValue = value?.map((row: any) => row.id || row);
+      renderFormItem: () => {
         if (permissionError) {
           return <div>failed to load</div>;
         }
@@ -154,25 +156,17 @@ export default () => {
           return <div>loading...</div>;
         }
         return (
-          <Transfer
-            {...rest}
-            titles={['待选', '已选']}
-            listStyle={{
-              width: 300,
-              height: 300,
-            }}
-            dataSource={permissionData?.list as any[]}
-            targetKeys={newValue}
-            showSearch
-            rowKey={(row: any) => row.id}
-            render={(row: any) => row.name}
-            pagination
+          <Select
+            mode="multiple"
+            options={permissionData?.list.map((item) => ({
+              label: item.name,
+              value: item.id,
+            }))}
           />
         );
       },
       render: (_, record: TableListItem) =>
         record.permissions?.map((item, index) => (
-          // eslint-disable-next-line react/no-array-index-key
           <Tag key={index} color="#87d068" style={{ marginBottom: 8 }}>
             {item.name}
           </Tag>
