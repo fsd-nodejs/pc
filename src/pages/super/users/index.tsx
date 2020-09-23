@@ -9,7 +9,7 @@ import {
   message,
   Tag,
   Popconfirm,
-  Upload,
+  // Upload,
   Input,
   Select,
 } from 'antd';
@@ -17,7 +17,7 @@ import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { FormInstance } from 'antd/es/form';
 import { SorterResult } from 'antd/es/table/interface';
 import { useRequest } from 'umi';
-import ImgCrop from 'antd-img-crop';
+// import ImgCrop from 'antd-img-crop';
 import { UploadFile } from 'antd/lib/upload/interface';
 
 import { queryUser, updateUser, createUser, removeUser, showUser } from '@/services/user';
@@ -144,47 +144,48 @@ export default () => {
       dataIndex: 'avatar',
       valueType: 'avatar',
       hideInSearch: true,
+      hideInForm: true,
       width: 50,
-      renderFormItem: (item, { value, onChange }) => {
-        const fileList =
-          typeof value === 'string'
-            ? [
-                {
-                  uid: '-1',
-                  status: 'done',
-                  url: value,
-                  name: value,
-                },
-              ]
-            : value || [];
+      // renderFormItem: (item, { value, onChange }) => {
+      //   const fileList =
+      //     typeof value === 'string'
+      //       ? [
+      //           {
+      //             uid: '-1',
+      //             status: 'done',
+      //             url: value,
+      //             name: value,
+      //           },
+      //         ]
+      //       : value || [];
 
-        return (
-          <ImgCrop rotate>
-            <Upload
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-              listType="picture-card"
-              onChange={({ fileList: newFileList }) => onChange && onChange(newFileList)}
-              fileList={fileList}
-              onPreview={async (file: any) => {
-                let src = file.url;
-                if (!src) {
-                  src = await new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file.originFileObj);
-                    reader.onload = () => resolve(reader.result);
-                  });
-                }
-                const image = new Image();
-                image.src = src;
-                const imgWindow: any = window.open(src);
-                imgWindow.document.write(image.outerHTML);
-              }}
-            >
-              {fileList.length < 1 && '+ Upload'}
-            </Upload>
-          </ImgCrop>
-        );
-      },
+      //   return (
+      //     <ImgCrop rotate>
+      //       <Upload
+      //         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+      //         listType="picture-card"
+      //         onChange={({ fileList: newFileList }) => onChange && onChange(newFileList)}
+      //         fileList={fileList}
+      //         onPreview={async (file: any) => {
+      //           let src = file.url;
+      //           if (!src) {
+      //             src = await new Promise((resolve) => {
+      //               const reader = new FileReader();
+      //               reader.readAsDataURL(file.originFileObj);
+      //               reader.onload = () => resolve(reader.result);
+      //             });
+      //           }
+      //           const image = new Image();
+      //           image.src = src;
+      //           const imgWindow: any = window.open(src);
+      //           imgWindow.document.write(image.outerHTML);
+      //         }}
+      //       >
+      //         {fileList.length < 1 && '+ Upload'}
+      //       </Upload>
+      //     </ImgCrop>
+      //   );
+      // },
     },
     {
       title: '名称',
@@ -477,6 +478,7 @@ export default () => {
             rowKey="id"
             type="form"
             form={{
+              layout: 'horizontal',
               labelCol: { span: 5 },
               wrapperCol: { span: 19 },
             }}
@@ -511,6 +513,7 @@ export default () => {
             rowKey="id"
             type="form"
             form={{
+              layout: 'horizontal',
               labelCol: { span: 5 },
               wrapperCol: { span: 19 },
               initialValues: {

@@ -387,6 +387,7 @@ export default () => {
           rowKey="id"
           type="form"
           form={{
+            layout: 'horizontal',
             labelCol: { span: 5 },
             wrapperCol: { span: 19 },
           }}
@@ -419,6 +420,7 @@ export default () => {
             rowKey="id"
             type="form"
             form={{
+              layout: 'horizontal',
               labelCol: { span: 5 },
               wrapperCol: { span: 19 },
               initialValues: currentFormValues,

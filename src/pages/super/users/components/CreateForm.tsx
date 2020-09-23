@@ -16,7 +16,6 @@ const CreateForm: React.FC<CreateFormProps> = (props) => {
       visible={createModalVisible}
       onCancel={() => onCancel()}
       footer={null}
-      width={768}
     >
       {props.children}
     </Modal>

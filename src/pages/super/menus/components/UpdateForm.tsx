@@ -67,7 +67,7 @@ const UpdateForm: React.RefForwardingComponent<UpdateFormHandleProps, UpdateForm
           <Input type="hidden" />
         </Form.Item>
         <BaseFormItems disabledParentKeys={[values.id]} />
-        <Form.Item wrapperCol={{ offset: 4, span: 20 }} style={{ textAlign: 'right' }}>
+        <div style={{ textAlign: 'right' }}>
           <Space size="middle" direction="horizontal" align="center">
             <Button
               htmlType="button"
@@ -81,7 +81,7 @@ const UpdateForm: React.RefForwardingComponent<UpdateFormHandleProps, UpdateForm
               提交
             </Button>
           </Space>
-        </Form.Item>
+        </div>
       </Form>
     </Modal>
   );
