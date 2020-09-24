@@ -26,7 +26,7 @@ const ShowForm: React.FC<ShowFormProps> = (props) => {
           (item, index) =>
             item.dataIndex !== 'option' && (
               // eslint-disable-next-line react/no-array-index-key
-              <Form.Item key={index} label={item.title} name={item.dataIndex} rules={item.rules}>
+              <Form.Item key={index} label={item.title} name={item.dataIndex}>
                 <Input disabled />
               </Form.Item>
             ),
