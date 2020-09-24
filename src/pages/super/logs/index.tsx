@@ -84,12 +84,14 @@ export default () => {
       dataIndex: 'name',
       ellipsis: true,
       width: 140,
-      rules: [
-        {
-          required: true,
-          message: '名称为必填项',
-        },
-      ],
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '名称为必填项',
+          },
+        ],
+      },
     },
     {
       title: 'HTTP方法',
@@ -104,20 +106,21 @@ export default () => {
         OPTIONS: { text: 'OPTIONS', status: 'Default' },
         HEAD: { text: 'HEAD', status: 'Default' },
       },
-      formItemProps: {
+      fieldProps: {
         mode: 'multiple',
       },
-      rules: [
-        {
-          required: true,
-          message: 'HTTP方法为必填项',
-        },
-      ],
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: 'HTTP方法为必填项',
+          },
+        ],
+      },
       render: (_, record: TableListItem) => (
         <>
           {record.method?.length > 0 ? (
-            // eslint-disable-next-line react/no-array-index-key
-            record.method.map((text, index) => <MethodTag key={index} text={text} />)
+            record.method.map((text) => <MethodTag text={text} />)
           ) : (
             <Tag color="#108ee9">ANY</Tag>
           )}

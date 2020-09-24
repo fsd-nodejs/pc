@@ -18,7 +18,6 @@ const ToolBar: React.FC<ToolBarProps> = ({ headerTitle, toolBarRender, toolBarOp
           {actions
             .filter((item) => item)
             .map((node, index) => (
-              // eslint-disable-next-line react/no-array-index-key
               <div key={index} className="ant-space-item">
                 {node}
               </div>
@@ -30,7 +29,6 @@ const ToolBar: React.FC<ToolBarProps> = ({ headerTitle, toolBarRender, toolBarOp
             {options
               .filter((item) => item)
               .map((node, index) => (
-                // eslint-disable-next-line react/no-array-index-key
                 <div key={index} className="ant-space-item">
                   {node}
                 </div>

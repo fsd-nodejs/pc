@@ -293,7 +293,6 @@ export default () => {
       },
       render: (_, record: TableListItem) =>
         record.permissions?.map((item, index) => (
-          // eslint-disable-next-line react/no-array-index-key
           <Tag key={index} color="#87d068" style={{ marginBottom: 8 }}>
             {item.name}
           </Tag>

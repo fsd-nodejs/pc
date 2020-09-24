@@ -2,7 +2,7 @@
 export interface TableListItem {
   id: string; // 自增id
   name: string; // 名称
-  method: string; // 请求方式
+  method: string[]; // 请求方式
   path: string; // 请求路径
   ip?: string; // 描述
   input?: string; // 输入
