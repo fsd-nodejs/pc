@@ -52,8 +52,8 @@
     "@ant-design/icons": "^4.2.2",
     "@ant-design/pro-layout": "6.2.5",
     "@ant-design/pro-table": "^2.8.1",
-    "antd": "^4.6.5",
-    "antd-img-crop": "^3.10.0",
+    "antd": "^4.6.6",
+    "antd-img-crop": "^3.12.0",
     "antd-nestable": "^1.0.17",
     "classnames": "^2.2.6",
     "lodash": "^4.17.20",
@@ -81,7 +81,7 @@
     "@umijs/plugin-blocks": "^2.2.1",
     "@umijs/plugin-esbuild": "^1.0.1",
     "@umijs/preset-ant-design-pro": "^1.2.0",
-    "@umijs/preset-react": "^1.6.7",
+    "@umijs/preset-react": "^1.6.8",
     "@umijs/preset-ui": "^2.2.7",
     "carlo": "^0.9.46",
     "cross-env": "^7.0.0",
@@ -96,7 +96,7 @@
     "prettier": "^2.1.2",
     "pro-download": "1.0.1",
     "puppeteer-core": "^2.1.1",
-    "stylelint": "^13.7.1"
+    "stylelint": "^13.7.2"
   },
   "engines": {
     "node": ">=10.0.0"
